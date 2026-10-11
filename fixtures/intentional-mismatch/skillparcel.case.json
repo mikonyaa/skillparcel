@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "id": "intentional-mismatch",
+  "title": "An author contract catches our changed source",
+  "description": "Original synthetic, intentionally prepared local fixture. No downloaded skill code executes.",
+  "tags": [
+    "synthetic",
+    "negative-control"
+  ],
+  "client": {
+    "adapter": "claude-code",
+    "supportedVersion": "2.1.280"
+  },
+  "skillDirectory": "skill/intentional-mismatch",
+  "invocation": {
+    "kind": "explicit-command",
+    "commandName": "intentional-mismatch",
+    "args": []
+  },
+  "expectedStages": {
+    "body": "required",
+    "reference-read": "optional"
+  },
+  "checks": [
+    {
+      "id": "body-text",
+      "stage": "body",
+      "sourceFile": "skill/intentional-mismatch/SKILL.md",
+      "sentinels": {
+        "begin": "<!-- SP_intentional-mismatch_BEGIN -->",
+        "end": "<!-- SP_intentional-mismatch_END -->"
+      },
+      "expectedText": "\nAuthor-owned revision A\n",
+      "mode": "exact-text",
+      "expectedOccurrences": 1,
+      "normalization": "none"
+    }
+  ],
+  "limits": {
+    "inputBytes": 262144,
+    "requestBytes": 8388608,
+    "turns": 8,
+    "timeoutMs": 30000
+  },
+  "golden": {
+    "author": "mikonyaa / SkillParcel synthetic corpus",
+    "basis": "Controlled source mutation B; golden A is intentionally unchanged. This is our fixture-contract failure and is not claimed as a vendor bug.",
+    "createdAt": "2026-10-11T21:37:09.553Z"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "literal": "pass",
+  "dollar-digit": "violation",
+  "argument-substitution": "pass",
+  "escaped-dollar": "pass",
+  "unicode-empty": "pass",
+  "lf": "pass",
+  "crlf": "pass",
+  "reference-read": "pass",
+  "reference-withheld": "pass",
+  "intentional-mismatch": "violation",
+  "repeated-html": "pass"
+}

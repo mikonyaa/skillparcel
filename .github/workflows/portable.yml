@@ -1,0 +1,41 @@
+name: Portable checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  portable:
+    name: Portable tests and package consumer
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.21.0
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run build
+      - run: npm run test:unit
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:report
+      - name: Build one final consumer archive
+        run: |
+          mkdir -p work/candidate
+          npm pack --json --pack-destination work/candidate > work/pack.json
+      - name: Verify the same archive outside checkout
+        run: npm run test:package -- --tarball work/candidate/skillparcel-0.1.0.tgz
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-candidate
+          path: work/candidate/skillparcel-0.1.0.tgz
+          if-no-files-found: error
+          retention-days: 7
+      - name: Native evidence boundary
+        run: echo 'Portable checks only. Signed Claude Code 2.1.280 macOS arm64 is verified locally for the release commit; no native job is claimed here.'

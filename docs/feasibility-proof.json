@@ -1,0 +1,33 @@
+{
+  "nativeVersion": "2.1.280",
+  "kind": "synthetic native feasibility capture; prototype before release",
+  "runs": [
+    {
+      "repeat": 1,
+      "exit": 0,
+      "bodyFragment": "\nSP_BODY_f2bd2ec6-0c62-4b7c-9036-ee2522eb9760\nFormula =B5*(1+$Bseven)\n",
+      "referenceTransmitted": true,
+      "excludedCanaryAbsent": true,
+      "configCanaryAbsent": true,
+      "nativeReadId": "sp_read_fc793879-6a1b-4a9a-b6ec-70a3db68c0fc"
+    },
+    {
+      "repeat": 2,
+      "exit": 0,
+      "bodyFragment": "\nSP_BODY_250f112f-719d-4b36-95bf-0f3a505ea999\nFormula =B5*(1+$Bseven)\n",
+      "referenceTransmitted": true,
+      "excludedCanaryAbsent": true,
+      "configCanaryAbsent": true,
+      "nativeReadId": "sp_read_7a519056-a8fe-4009-8acb-07b10d64394f"
+    },
+    {
+      "repeat": 3,
+      "exit": 0,
+      "bodyFragment": "\nSP_BODY_c94ce05b-64a9-480d-9155-be1e0bdb2ab2\nFormula =B5*(1+$Bseven)\n",
+      "referenceTransmitted": true,
+      "excludedCanaryAbsent": true,
+      "configCanaryAbsent": true,
+      "nativeReadId": "sp_read_c04c8d52-7ff9-44b5-b1b6-52e445501fdd"
+    }
+  ]
+}

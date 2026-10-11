@@ -1,0 +1,10 @@
+node_modules/
+dist/
+work/
+*.tgz
+parcel-results/
+demo-results/
+private-capture/
+test-results/
+playwright-report/
+.DS_Store

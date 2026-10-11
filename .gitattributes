@@ -1,0 +1,6 @@
+* text=auto eol=lf
+# Contract fixtures retain their exact bytes, including CRLF/trailing spaces.
+fixtures/**/SKILL.md -text whitespace=-blank-at-eol,cr-at-eol
+templates/**/SKILL.md -text whitespace=-blank-at-eol,cr-at-eol
+*.png binary
+*.cast -text

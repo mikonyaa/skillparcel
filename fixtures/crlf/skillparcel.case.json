@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "id": "crlf",
+  "title": "CRLF with declared CRLF → LF normalization",
+  "description": "Original synthetic, intentionally prepared local fixture. No downloaded skill code executes.",
+  "tags": [
+    "synthetic"
+  ],
+  "client": {
+    "adapter": "claude-code",
+    "supportedVersion": "2.1.280"
+  },
+  "skillDirectory": "skill/crlf",
+  "invocation": {
+    "kind": "explicit-command",
+    "commandName": "crlf",
+    "args": []
+  },
+  "expectedStages": {
+    "body": "required",
+    "reference-read": "optional"
+  },
+  "checks": [
+    {
+      "id": "body-text",
+      "stage": "body",
+      "sourceFile": "skill/crlf/SKILL.md",
+      "sentinels": {
+        "begin": "<!-- SP_crlf_BEGIN -->",
+        "end": "<!-- SP_crlf_END -->"
+      },
+      "expectedText": "\r\nFirst line\r\nSecond line\r\n",
+      "mode": "exact-text",
+      "expectedOccurrences": 1,
+      "normalization": "crlf-to-lf"
+    }
+  ],
+  "limits": {
+    "inputBytes": 262144,
+    "requestBytes": 8388608,
+    "turns": 8,
+    "timeoutMs": 30000
+  },
+  "golden": {
+    "author": "mikonyaa / SkillParcel synthetic corpus",
+    "basis": "Author requires exact source text between its explicit sentinels, before any native run.",
+    "createdAt": "2026-10-11T21:37:09.553Z"
+  }
+}

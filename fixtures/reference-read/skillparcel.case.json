@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-read",
+  "title": "Body followed by a forced native Read",
+  "description": "Original synthetic, intentionally prepared local fixture. No downloaded skill code executes.",
+  "tags": [
+    "synthetic"
+  ],
+  "client": {
+    "adapter": "claude-code",
+    "supportedVersion": "2.1.280"
+  },
+  "skillDirectory": "skill/reference-read",
+  "invocation": {
+    "kind": "explicit-command",
+    "commandName": "reference-read",
+    "args": []
+  },
+  "expectedStages": {
+    "body": "required",
+    "reference-read": "required"
+  },
+  "checks": [
+    {
+      "id": "body-text",
+      "stage": "body",
+      "sourceFile": "skill/reference-read/SKILL.md",
+      "sentinels": {
+        "begin": "<!-- SP_reference-read_BEGIN -->",
+        "end": "<!-- SP_reference-read_END -->"
+      },
+      "expectedText": "\nBody is measured before Read.\nReference: references/proof.txt\n",
+      "mode": "exact-text",
+      "expectedOccurrences": 1,
+      "normalization": "none"
+    },
+    {
+      "id": "forced-read-text",
+      "stage": "reference-read",
+      "sourceFile": "skill/reference-read/references/proof.txt",
+      "sentinels": {
+        "begin": "<!-- SP_REF_BEGIN -->",
+        "end": "<!-- SP_REF_END -->"
+      },
+      "expectedText": "\nOriginal reference only: cedar-41.\nПрочитано 世界 👋 é\n",
+      "mode": "exact-text",
+      "expectedOccurrences": 1,
+      "normalization": "none"
+    }
+  ],
+  "referenceRead": {
+    "path": "skill/reference-read/references/proof.txt",
+    "request": true,
+    "permission": "allow"
+  },
+  "limits": {
+    "inputBytes": 262144,
+    "requestBytes": 8388608,
+    "turns": 8,
+    "timeoutMs": 30000
+  },
+  "golden": {
+    "author": "mikonyaa / SkillParcel synthetic corpus",
+    "basis": "Author requires exact source text between its explicit sentinels, before any native run.",
+    "createdAt": "2026-10-11T21:37:09.553Z"
+  }
+}

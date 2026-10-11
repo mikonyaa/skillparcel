@@ -1,0 +1,10 @@
+---
+name: repeated-html
+description: Original synthetic SkillParcel fixture
+disable-model-invocation: true
+---
+<!-- SP_repeated-html_BEGIN -->
+repeat-me repeat-me
+</script><script>globalThis.SKILLPARCEL_ATTACK=true</script>
+Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · 
+<!-- SP_repeated-html_END -->

@@ -1,0 +1,44 @@
+{
+  "browser": "156.0.8078.4",
+  "results": [
+    {
+      "width": 1440,
+      "fileReport": true,
+      "filters": true,
+      "evidence": true,
+      "keyboard": true,
+      "emptyErrorUnsupported": true,
+      "longCodeScroll": true,
+      "noPageOverflow": true,
+      "htmlPayloadSafe": true,
+      "clipboardFallback": true,
+      "externalRequests": 0
+    },
+    {
+      "width": 1024,
+      "fileReport": true,
+      "filters": true,
+      "evidence": true,
+      "keyboard": true,
+      "emptyErrorUnsupported": true,
+      "longCodeScroll": true,
+      "noPageOverflow": true,
+      "htmlPayloadSafe": true,
+      "clipboardFallback": true,
+      "externalRequests": 0
+    },
+    {
+      "width": 390,
+      "fileReport": true,
+      "filters": true,
+      "evidence": true,
+      "keyboard": true,
+      "emptyErrorUnsupported": true,
+      "longCodeScroll": true,
+      "noPageOverflow": true,
+      "htmlPayloadSafe": true,
+      "clipboardFallback": true,
+      "externalRequests": 0
+    }
+  ]
+}

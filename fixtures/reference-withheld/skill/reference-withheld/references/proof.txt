@@ -1,0 +1,4 @@
+<!-- SP_REF_BEGIN -->
+Original reference only: cedar-41.
+Прочитано 世界 👋 é
+<!-- SP_REF_END -->

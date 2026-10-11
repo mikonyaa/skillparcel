@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "id": "repeated-html",
+  "title": "Repeated marker, long line and hostile HTML as text",
+  "description": "Original synthetic, intentionally prepared local fixture. No downloaded skill code executes.",
+  "tags": [
+    "synthetic"
+  ],
+  "client": {
+    "adapter": "claude-code",
+    "supportedVersion": "2.1.280"
+  },
+  "skillDirectory": "skill/repeated-html",
+  "invocation": {
+    "kind": "explicit-command",
+    "commandName": "repeated-html",
+    "args": []
+  },
+  "expectedStages": {
+    "body": "required",
+    "reference-read": "optional"
+  },
+  "checks": [
+    {
+      "id": "body-text",
+      "stage": "body",
+      "sourceFile": "skill/repeated-html/SKILL.md",
+      "sentinels": {
+        "begin": "<!-- SP_repeated-html_BEGIN -->",
+        "end": "<!-- SP_repeated-html_END -->"
+      },
+      "expectedText": "\nrepeat-me repeat-me\n</script><script>globalThis.SKILLPARCEL_ATTACK=true</script>\nLong synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · \n",
+      "mode": "exact-text",
+      "expectedOccurrences": 1,
+      "normalization": "none"
+    },
+    {
+      "id": "two-occurrences-only-in-first-request",
+      "stage": "body",
+      "sourceFile": "skill/repeated-html/SKILL.md",
+      "sentinels": {
+        "begin": "<!-- SP_repeated-html_BEGIN -->",
+        "end": "<!-- SP_repeated-html_END -->"
+      },
+      "expectedText": "repeat-me",
+      "mode": "contains-exact",
+      "expectedOccurrences": 2,
+      "normalization": "none"
+    }
+  ],
+  "limits": {
+    "inputBytes": 262144,
+    "requestBytes": 8388608,
+    "turns": 8,
+    "timeoutMs": 30000
+  },
+  "golden": {
+    "author": "mikonyaa / SkillParcel synthetic corpus",
+    "basis": "Author requires exact source text between its explicit sentinels, before any native run.",
+    "createdAt": "2026-10-11T21:37:09.553Z"
+  }
+}

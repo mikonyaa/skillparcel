@@ -1,0 +1,50 @@
+{
+  "name": "skillparcel",
+  "version": "0.1.0",
+  "description": "Capture what native Claude Code loads from synthetic skill contracts before inference",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "bin": {
+    "skillparcel": "dist/cli/main.js"
+  },
+  "files": [
+    "dist",
+    "fixtures",
+    "templates",
+    "examples",
+    "README.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikonyaa/skillparcel.git"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src scripts tests",
+    "build": "tsc && node scripts/build.mjs",
+    "test:unit": "node --test tests/unit/*.test.mjs",
+    "test:native": "node scripts/native-test.mjs",
+    "test:package": "node tests/package/consumer.mjs",
+    "test:report": "node tests/report/browser.mjs",
+    "demo:capture": "node scripts/demo-capture.mjs"
+  },
+  "dependencies": {
+    "diff": "9.0.0",
+    "zod": "4.6.6"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/diff": "7.0.2",
+    "@types/node": "24.19.2",
+    "eslint": "10.12.0",
+    "playwright": "1.64.0",
+    "prettier": "3.9.10",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.1"
+  }
+}

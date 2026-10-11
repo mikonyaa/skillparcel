@@ -1,0 +1,561 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'"><title>SkillParcel · Native transmission report</title><style>:root {
+  --paper: #fbfaf7;
+  --ink: #222b2b;
+  --muted: #5c6867;
+  --line: #c8ceca;
+  --accent: #165e55;
+  --warn: #8a432c;
+  --error: #922d39;
+  --code: #eeefea;
+  --add: #e1efe7;
+  --remove: #fae6e1;
+  --white: #fff;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font:
+    15px/1.6 Georgia,
+    serif;
+}
+main {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 44px 42px;
+}
+header {
+  padding: 0 0 30px;
+  border-bottom: 3px solid var(--ink);
+}
+h1 {
+  font-size: clamp(30px, 4vw, 50px);
+  line-height: 1.16;
+  letter-spacing: -1px;
+  font-weight: 400;
+  margin: 8px 0 18px;
+}
+h2 {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.3;
+  margin: 0 0 14px;
+}
+h3 {
+  font-size: 19px;
+  font-weight: 400;
+  margin: 0 0 10px;
+}
+.eyebrow,
+.rail,
+table,
+select,
+button,
+input,
+.meta,
+.status,
+summary,
+#summary,
+#coverage,
+#recorded {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--accent);
+  margin: 0;
+}
+.rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  margin-top: 25px;
+  color: var(--muted);
+}
+.rail span {
+  color: var(--accent);
+}
+#coverage {
+  margin: 0;
+  font-size: 13px;
+}
+#recorded {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 10px 0 0;
+}
+section {
+  padding: 26px 0;
+  border-bottom: 1px solid var(--line);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.section-head h2 {
+  margin: 0;
+}
+label {
+  font-size: 13px;
+}
+select {
+  margin-left: 10px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--paper);
+  color: var(--ink);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+th {
+  text-align: left;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 400;
+  border-bottom: 1px solid var(--ink);
+  padding: 10px 12px;
+}
+td {
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+td:first-child {
+  width: 48%;
+}
+td button {
+  font-size: 13px;
+  text-align: left;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+tr[aria-selected="true"] {
+  background: var(--code);
+}
+button {
+  cursor: pointer;
+  border: 1px solid var(--line);
+  padding: 8px 12px;
+  background: var(--paper);
+  color: var(--accent);
+}
+button:hover {
+  color: var(--ink);
+  border-color: var(--accent);
+}
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+.status {
+  font-size: 12px;
+  font-weight: 600;
+}
+.status.pass {
+  color: var(--accent);
+}
+.status.violation {
+  color: var(--warn);
+}
+.status.error {
+  color: var(--error);
+}
+.status.unsupported,
+.status.cancelled {
+  color: var(--muted);
+}
+.meta {
+  font-size: 11px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.check {
+  margin-top: 26px;
+}
+.panes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  min-width: 0;
+}
+.panes > div {
+  min-width: 0;
+}
+pre {
+  background: var(--code);
+  border-left: 2px solid var(--line);
+  padding: 16px;
+  margin: 6px 0 16px;
+  overflow-x: auto;
+  max-width: 100%;
+  font:
+    12px/1.65 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  white-space: pre;
+  tab-size: 4;
+}
+.diff {
+  border-color: var(--accent);
+}
+.diff span {
+  display: block;
+  white-space: pre;
+}
+.diff .added {
+  background: var(--add);
+}
+.diff .removed {
+  background: var(--remove);
+}
+.table-scroll {
+  overflow-x: auto;
+}
+details {
+  margin: 20px 0;
+}
+summary {
+  cursor: pointer;
+  font-size: 12px;
+  padding: 8px 0;
+}
+.evidence {
+  font-size: 12px;
+  padding-left: 22px;
+  overflow-wrap: anywhere;
+}
+.evidence li {
+  padding: 3px 0;
+}
+.reason {
+  border-left: 3px solid var(--warn);
+  padding-left: 14px;
+  overflow-wrap: anywhere;
+}
+footer {
+  padding-top: 30px;
+  color: var(--muted);
+  font-size: 13px;
+}
+footer h2 {
+  color: var(--ink);
+}
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid var(--line);
+  background: var(--white);
+}
+.fallback {
+  display: block;
+  margin-top: 12px;
+}
+[hidden] {
+  display: none !important;
+}
+#summary {
+  font-size: 11px;
+  color: var(--muted);
+}
+@media (max-width: 700px) {
+  main {
+    padding: 24px 18px;
+  }
+  .section-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .panes {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  td,
+  th {
+    padding: 9px 6px;
+  }
+  td:first-child {
+    width: 44%;
+  }
+  table {
+    font-size: 10px;
+  }
+  td button {
+    font-size: 11px;
+  }
+  .rail {
+    font-size: 9px;
+    gap: 8px;
+  }
+  h2 {
+    font-size: 22px;
+  }
+  pre {
+    font-size: 11px;
+  }
+  header {
+    padding-bottom: 24px;
+  }
+  .section-head label {
+    width: 100%;
+  }
+  .section-head select {
+    float: right;
+  }
+}
+@media print {
+  #copy,
+  .section-head label {
+    display: none;
+  }
+  main {
+    padding: 0;
+  }
+  pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+}
+</style></head><body><main><header><p class="eyebrow">SKILLPARCEL / TRANSMISSION LAB</p><h1>What reached the endpoint.</h1><p id="coverage"></p><p id="recorded"></p><div class="rail" aria-label="Measured pipeline">SOURCE <span>→</span> NATIVE LOAD <span>→</span> HTTP CAPTURE <span>→</span> FORCED READ</div></header><section aria-labelledby="cases-heading"><div class="section-head"><h2 id="cases-heading">Fixture contracts</h2><label>Filter outcome <select id="filter"><option value="all">All outcomes</option><option>pass</option><option>violation</option><option>error</option><option>unsupported</option><option>cancelled</option></select></label></div><p id="summary" aria-live="polite"></p><div class="table-scroll"><table><thead><tr><th>Case</th><th>Outcome</th><th>Measured stages</th><th>Checks</th></tr></thead><tbody id="cases"></tbody></table></div><p id="empty" hidden>No cases match this filter.</p></section><section id="detail" aria-labelledby="case-heading"></section><footer><h2>Measurement boundaries</h2><ul id="omissions"></ul><p id="network"></p><p id="versions"></p><button id="copy" type="button">Copy native demo command</button><label class="fallback" hidden>Command <input id="command" readonly value="skillparcel demo --client /absolute/path/to/claude --out ./demo-results --no-open"></label><p id="copy-status" aria-live="polite"></p></footer></main><script id="report-data" type="application/json">{"schemaVersion":1,"toolVersion":"0.1.0","adapterVersion":"1.0.0","nativeVersion":"2.1.280","nativeSha256":"387a5c5dcdbb815085edf0baf79591f9d8894efe922bceaf3d75b1b08055229d","OS":"darwin","arch":"arm64","recordedAt":"2026-10-11T22:00:49.556Z","invocationMode":"explicit-command; bare + add-dir","networkMode":"127.0.0.1 synthetic Messages endpoint; no OS egress confinement","coverage":"native-verified","recorded":true,"cases":[{"id":"argument-substitution","title":"Intentional indexed and full argument substitution","fixtureHash":"1e5c1064434b56b9c5f9e7f609c37232431a42b0e45a63503fd86c365873bbc3","outcome":"pass","measurementStatus":"complete","contractStatus":"pass","observedStages":["body"],"checks":[{"id":"body-text","stage":"body","sourceFile":"skill/argument-substitution/SKILL.md","sourceSha256":"7379e8fc1af455faaff132579ef96ef37331ffb06d3c16cf8d372af5c4eb7349","encoding":"UTF-8","sourceRange":{"startByte":186,"endByte":235},"source":"\nAll: $ARGUMENTS\nFirst: $0\nSecond: $ARGUMENTS[1]\n","expected":"\nAll: north south\nFirst: north\nSecond: south\n","transmitted":"\nAll: north south\nFirst: north\nSecond: south\n","mode":"exact-text","normalization":"none","expectedOccurrences":1,"pass":true,"rawPass":true,"occurrences":1,"diff":[{"kind":"equal","text":"\nAll: north south\nFirst: north\nSecond: south\n"}],"evidenceRef":{"requestOrdinal":1,"messageIndex":0,"blockIndex":3}}],"limits":{"inputBytes":262144,"requestBytes":8388608,"turns":8,"timeoutMs":30000},"evidence":[{"sequence":1,"stage":"validate","elapsedMs":0},{"sequence":2,"stage":"isolate","elapsedMs":1},{"sequence":3,"stage":"start-endpoint","elapsedMs":18},{"sequence":4,"stage":"start-native","elapsedMs":18},{"sequence":5,"stage":"invoked","elapsedMs":18,"detail":"Explicit native /argument-substitution"},{"sequence":6,"stage":"body-observed","elapsedMs":195,"requestOrdinal":1},{"sequence":7,"stage":"compared","elapsedMs":217},{"sequence":8,"stage":"completed","elapsedMs":217},{"sequence":9,"stage":"cleanup","elapsedMs":219}],"evidenceRefs":[{"requestOrdinal":1,"bytes":2058}],"isolation":{"uniqueConfig":true,"newSession":true,"homePreserved":true,"excludedCanaryAbsent":true,"onlyExpectedTools":true,"cleanup":true},"nativeExitCode":0,"omissions":["Reference Read was not requested or measured"]},{"id":"crlf","title":"CRLF with declared CRLF → LF normalization","fixtureHash":"935d4651ad4e453f235a0d6b84d1f9e94bb0a1ab00f44872e0382f763f8d2e3c","outcome":"pass","measurementStatus":"complete","contractStatus":"pass","observedStages":["body"],"checks":[{"id":"body-text","stage":"body","sourceFile":"skill/crlf/SKILL.md","sourceSha256":"fea4accf77f00367aefa0c092ce473d9ccc30c8a51eb0dcb1d7c57c5f8fdde73","encoding":"UTF-8","sourceRange":{"startByte":129,"endByte":156},"source":"\r\nFirst line\r\nSecond line\r\n","expected":"\r\nFirst line\r\nSecond line\r\n","transmitted":"\r\nFirst line\r\nSecond line\r\n","mode":"exact-text","normalization":"crlf-to-lf","expectedOccurrences":1,"pass":true,"rawPass":true,"occurrences":1,"diff":[{"kind":"equal","text":"\r\nFirst line\r\nSecond line\r\n"}],"evidenceRef":{"requestOrdinal":1,"messageIndex":0,"blockIndex":3}}],"limits":{"inputBytes":262144,"requestBytes":8388608,"turns":8,"timeoutMs":30000},"evidence":[{"sequence":1,"stage":"validate","elapsedMs":0},{"sequence":2,"stage":"isolate","elapsedMs":0},{"sequence":3,"stage":"start-endpoint","elapsedMs":16},{"sequence":4,"stage":"start-native","elapsedMs":16},{"sequence":5,"stage":"invoked","elapsedMs":16,"detail":"Explicit native /crlf"},{"sequence":6,"stage":"body-observed","elapsedMs":194,"requestOrdinal":1},{"sequence":7,"stage":"compared","elapsedMs":216},{"sequence":8,"stage":"completed","elapsedMs":216},{"sequence":9,"stage":"cleanup","elapsedMs":218}],"evidenceRefs":[{"requestOrdinal":1,"bytes":1917}],"isolation":{"uniqueConfig":true,"newSession":true,"homePreserved":true,"excludedCanaryAbsent":true,"onlyExpectedTools":true,"cleanup":true},"nativeExitCode":0,"omissions":["Reference Read was not requested or measured"]},{"id":"dollar-digit","title":"Dollar digits with seven explicit arguments","fixtureHash":"05d4d1e13f8652f616ba6a1afb6e68611696c015018b103f4304e9fb4cc76d5b","outcome":"violation","measurementStatus":"complete","contractStatus":"violation","observedStages":["body"],"checks":[{"id":"body-text","stage":"body","sourceFile":"skill/dollar-digit/SKILL.md","sourceSha256":"f80dd34f59eb74b7bebd3f226131d32f29366183221c8880922508087516d25a","encoding":"UTF-8","sourceRange":{"startByte":140,"endByte":185},"source":"\nFormula =B5*(1+$B$6)\nSecond: $1\nSeventh: $6\n","expected":"\nFormula =B5*(1+$B$6)\nSecond: $1\nSeventh: $6\n","transmitted":"\nFormula =B5*(1+$Bseven)\nSecond: two\nSeventh: seven\n","mode":"exact-text","normalization":"none","expectedOccurrences":1,"pass":false,"rawPass":false,"occurrences":0,"diff":[{"kind":"equal","text":"\n"},{"kind":"removed","text":"Formula =B5*(1+$B$6)\nSecond: $1\nSeventh: $6\n"},{"kind":"added","text":"Formula =B5*(1+$Bseven)\nSecond: two\nSeventh: seven\n"}],"evidenceRef":{"requestOrdinal":1,"messageIndex":0,"blockIndex":3}}],"limits":{"inputBytes":262144,"requestBytes":8388608,"turns":8,"timeoutMs":30000},"evidence":[{"sequence":1,"stage":"validate","elapsedMs":0},{"sequence":2,"stage":"isolate","elapsedMs":0},{"sequence":3,"stage":"start-endpoint","elapsedMs":17},{"sequence":4,"stage":"start-native","elapsedMs":17},{"sequence":5,"stage":"invoked","elapsedMs":17,"detail":"Explicit native /dollar-digit"},{"sequence":6,"stage":"body-observed","elapsedMs":193,"requestOrdinal":1},{"sequence":7,"stage":"compared","elapsedMs":213},{"sequence":8,"stage":"completed","elapsedMs":213},{"sequence":9,"stage":"cleanup","elapsedMs":215}],"evidenceRefs":[{"requestOrdinal":1,"bytes":2042}],"isolation":{"uniqueConfig":true,"newSession":true,"homePreserved":true,"excludedCanaryAbsent":true,"onlyExpectedTools":true,"cleanup":true},"nativeExitCode":0,"omissions":["Reference Read was not requested or measured"]},{"id":"escaped-dollar","title":"Escaped literal formula and awk placeholder","fixtureHash":"080247759ef4291c4128a46480bc5f10407791ad7b9e457079bc37ebe03d6826","outcome":"pass","measurementStatus":"complete","contractStatus":"pass","observedStages":["body"],"checks":[{"id":"body-text","stage":"body","sourceFile":"skill/escaped-dollar/SKILL.md","sourceSha256":"e061acbd17b190b42f6d8decfa9b1415248395788c0d1e3ac2b465a2538e2f5a","encoding":"UTF-8","sourceRange":{"startByte":144,"endByte":197},"source":"\nFormula =B5*(1+$B\\$6)\nawk '{print \\$1}'\nLiteral \\$6\n","expected":"\nFormula =B5*(1+$B$6)\nawk '{print $1}'\nLiteral $6\n","transmitted":"\nFormula =B5*(1+$B$6)\nawk '{print $1}'\nLiteral $6\n","mode":"exact-text","normalization":"none","expectedOccurrences":1,"pass":true,"rawPass":true,"occurrences":1,"diff":[{"kind":"equal","text":"\nFormula =B5*(1+$B$6)\nawk '{print $1}'\nLiteral $6\n"}],"evidenceRef":{"requestOrdinal":1,"messageIndex":0,"blockIndex":3}}],"limits":{"inputBytes":262144,"requestBytes":8388608,"turns":8,"timeoutMs":30000},"evidence":[{"sequence":1,"stage":"validate","elapsedMs":0},{"sequence":2,"stage":"isolate","elapsedMs":1},{"sequence":3,"stage":"start-endpoint","elapsedMs":16},{"sequence":4,"stage":"start-native","elapsedMs":16},{"sequence":5,"stage":"invoked","elapsedMs":16,"detail":"Explicit native /escaped-dollar"},{"sequence":6,"stage":"body-observed","elapsedMs":185,"requestOrdinal":1},{"sequence":7,"stage":"compared","elapsedMs":205},{"sequence":8,"stage":"completed","elapsedMs":205},{"sequence":9,"stage":"cleanup","elapsedMs":207}],"evidenceRefs":[{"requestOrdinal":1,"bytes":2098}],"isolation":{"uniqueConfig":true,"newSession":true,"homePreserved":true,"excludedCanaryAbsent":true,"onlyExpectedTools":true,"cleanup":true},"nativeExitCode":0,"omissions":["Reference Read was not requested or measured"]},{"id":"intentional-mismatch","title":"An author contract catches our changed source","fixtureHash":"eee23238006fa4cc4758d52716ccba3c62b6076521b7148e286ebe8c9ad4b8f0","outcome":"violation","measurementStatus":"complete","contractStatus":"violation","observedStages":["body"],"checks":[{"id":"body-text","stage":"body","sourceFile":"skill/intentional-mismatch/SKILL.md","sourceSha256":"a9ec816ac50f976c112c5d931fe407c8ba5947362143c97fb73dd965095ca026","encoding":"UTF-8","sourceRange":{"startByte":156,"endByte":181},"source":"\nAuthor-owned revision B\n","expected":"\nAuthor-owned revision A\n","transmitted":"\nAuthor-owned revision B\n","mode":"exact-text","normalization":"none","expectedOccurrences":1,"pass":false,"rawPass":false,"occurrences":0,"diff":[{"kind":"equal","text":"\n"},{"kind":"removed","text":"Author-owned revision A\n"},{"kind":"added","text":"Author-owned revision B\n"}],"evidenceRef":{"requestOrdinal":1,"messageIndex":0,"blockIndex":3}}],"limits":{"inputBytes":262144,"requestBytes":8388608,"turns":8,"timeoutMs":30000},"evidence":[{"sequence":1,"stage":"validate","elapsedMs":0},{"sequence":2,"stage":"isolate","elapsedMs":0},{"sequence":3,"stage":"start-endpoint","elapsedMs":16},{"sequence":4,"stage":"start-native","elapsedMs":16},{"sequence":5,"stage":"invoked","elapsedMs":16,"detail":"Explicit native /intentional-mismatch"},{"sequence":6,"stage":"body-observed","elapsedMs":182,"requestOrdinal":1},{"sequence":7,"stage":"compared","elapsedMs":203},{"sequence":8,"stage":"completed","elapsedMs":203},{"sequence":9,"stage":"cleanup","elapsedMs":205}],"evidenceRefs":[{"requestOrdinal":1,"bytes":1989}],"isolation":{"uniqueConfig":true,"newSession":true,"homePreserved":true,"excludedCanaryAbsent":true,"onlyExpectedTools":true,"cleanup":true},"nativeExitCode":0,"omissions":["Reference Read was not requested or measured"]},{"id":"lf","title":"LF bytes with exact comparison","fixtureHash":"9bdcf191afa798106e2e908cb1de1d40ebcb4bb3da3676b9b0067108820a8f68","outcome":"pass","measurementStatus":"complete","contractStatus":"pass","observedStages":["body"],"checks":[{"id":"body-text","stage":"body","sourceFile":"skill/lf/SKILL.md","sourceSha256":"4f437cad956199efe6db8ddd151c94afd2b91064e6c3ccc3dab130c1a98ed16b","encoding":"UTF-8","sourceRange":{"startByte":120,"endByte":144},"source":"\nFirst line\nSecond line\n","expected":"\nFirst line\nSecond line\n","transmitted":"\nFirst line\nSecond line\n","mode":"exact-text","normalization":"none","expectedOccurrences":1,"pass":true,"rawPass":true,"occurrences":1,"diff":[{"kind":"equal","text":"\nFirst line\nSecond line\n"}],"evidenceRef":{"requestOrdinal":1,"messageIndex":0,"blockIndex":3}}],"limits":{"inputBytes":262144,"requestBytes":8388608,"turns":8,"timeoutMs":30000},"evidence":[{"sequence":1,"stage":"validate","elapsedMs":0},{"sequence":2,"stage":"isolate","elapsedMs":1},{"sequence":3,"stage":"start-endpoint","elapsedMs":16},{"sequence":4,"stage":"start-native","elapsedMs":16},{"sequence":5,"stage":"invoked","elapsedMs":16,"detail":"Explicit native /lf"},{"sequence":6,"stage":"body-observed","elapsedMs":181,"requestOrdinal":1},{"sequence":7,"stage":"compared","elapsedMs":202},{"sequence":8,"stage":"completed","elapsedMs":202},{"sequence":9,"stage":"cleanup","elapsedMs":204}],"evidenceRefs":[{"requestOrdinal":1,"bytes":1899}],"isolation":{"uniqueConfig":true,"newSession":true,"homePreserved":true,"excludedCanaryAbsent":true,"onlyExpectedTools":true,"cleanup":true},"nativeExitCode":0,"omissions":["Reference Read was not requested or measured"]},{"id":"literal","title":"A literal through the native loader","fixtureHash":"523b571d4587cfc4f56d6d130b1d6bcbc7dbfa0263dbf6fd4225e5e5c45939bf","outcome":"pass","measurementStatus":"complete","contractStatus":"pass","observedStages":["body"],"checks":[{"id":"body-text","stage":"body","sourceFile":"skill/literal/SKILL.md","sourceSha256":"28e66bf6f9f5e931c942e56a956d07c108d1deb0fb0279d16f7e1bf20bf4fb43","encoding":"UTF-8","sourceRange":{"startByte":130,"endByte":204},"source":"\nSkillParcel original synthetic literal: orchard-73.\nFormula =B5*(1+$B$6)\n","expected":"\nSkillParcel original synthetic literal: orchard-73.\nFormula =B5*(1+$B$6)\n","transmitted":"\nSkillParcel original synthetic literal: orchard-73.\nFormula =B5*(1+$B$6)\n","mode":"exact-text","normalization":"none","expectedOccurrences":1,"pass":true,"rawPass":true,"occurrences":1,"diff":[{"kind":"equal","text":"\nSkillParcel original synthetic literal: orchard-73.\nFormula =B5*(1+$B$6)\n"}],"evidenceRef":{"requestOrdinal":1,"messageIndex":0,"blockIndex":3}}],"limits":{"inputBytes":262144,"requestBytes":8388608,"turns":8,"timeoutMs":30000},"evidence":[{"sequence":1,"stage":"validate","elapsedMs":0},{"sequence":2,"stage":"isolate","elapsedMs":0},{"sequence":3,"stage":"start-endpoint","elapsedMs":16},{"sequence":4,"stage":"start-native","elapsedMs":16},{"sequence":5,"stage":"invoked","elapsedMs":16,"detail":"Explicit native /literal"},{"sequence":6,"stage":"body-observed","elapsedMs":181,"requestOrdinal":1},{"sequence":7,"stage":"compared","elapsedMs":202},{"sequence":8,"stage":"completed","elapsedMs":202},{"sequence":9,"stage":"cleanup","elapsedMs":204}],"evidenceRefs":[{"requestOrdinal":1,"bytes":1974}],"isolation":{"uniqueConfig":true,"newSession":true,"homePreserved":true,"excludedCanaryAbsent":true,"onlyExpectedTools":true,"cleanup":true},"nativeExitCode":0,"omissions":["Reference Read was not requested or measured"]},{"id":"reference-read","title":"Body followed by a forced native Read","fixtureHash":"cf034bf7c1bba13933efb2ecb6ae37e18c9fda8a340cd5f55ff717b07612a0b1","outcome":"pass","measurementStatus":"complete","contractStatus":"pass","observedStages":["body","reference-read"],"checks":[{"id":"body-text","stage":"body","sourceFile":"skill/reference-read/SKILL.md","sourceSha256":"bb2a2b99cfed89016e5b6fdd76cb599bdd8e13916f5e2eed119f142a20a09cbd","encoding":"UTF-8","sourceRange":{"startByte":144,"endByte":207},"source":"\nBody is measured before Read.\nReference: references/proof.txt\n","expected":"\nBody is measured before Read.\nReference: references/proof.txt\n","transmitted":"\nBody is measured before Read.\nReference: references/proof.txt\n","mode":"exact-text","normalization":"none","expectedOccurrences":1,"pass":true,"rawPass":true,"occurrences":1,"diff":[{"kind":"equal","text":"\nBody is measured before Read.\nReference: references/proof.txt\n"}],"evidenceRef":{"requestOrdinal":1,"messageIndex":0,"blockIndex":3}},{"id":"forced-read-text","stage":"reference-read","sourceFile":"skill/reference-read/references/proof.txt","sourceSha256":"359d8820caccdd004c6ad3a2fdbec7c6dbf003bb9295c413b658c699b054b172","encoding":"UTF-8","sourceRange":{"startByte":21,"endByte":92},"source":"\nOriginal reference only: cedar-41.\nПрочитано 世界 👋 é\n","expected":"\nOriginal reference only: cedar-41.\nПрочитано 世界 👋 é\n","transmitted":"\nOriginal reference only: cedar-41.\nПрочитано 世界 👋 é\n","mode":"exact-text","normalization":"none","expectedOccurrences":1,"pass":true,"rawPass":true,"occurrences":1,"diff":[{"kind":"equal","text":"\nOriginal reference only: cedar-41.\nПрочитано 世界 👋 é\n"}],"evidenceRef":{"requestOrdinal":2,"messageIndex":2,"blockIndex":0,"toolUseId":"sp_read_59d31cdb-c935-44c8-a598-c091cb944794"}}],"limits":{"inputBytes":262144,"requestBytes":8388608,"turns":8,"timeoutMs":30000},"evidence":[{"sequence":1,"stage":"validate","elapsedMs":0},{"sequence":2,"stage":"isolate","elapsedMs":1},{"sequence":3,"stage":"start-endpoint","elapsedMs":16},{"sequence":4,"stage":"start-native","elapsedMs":16},{"sequence":5,"stage":"invoked","elapsedMs":16,"detail":"Explicit native /reference-read"},{"sequence":6,"stage":"body-observed","elapsedMs":182,"requestOrdinal":1},{"sequence":7,"stage":"optional-read-requested","elapsedMs":182,"requestOrdinal":1,"toolUseId":"sp_read_59d31cdb-c935-44c8-a598-c091cb944794","detail":"forced native Read path"},{"sequence":8,"stage":"read-executed","elapsedMs":213,"toolUseId":"sp_read_59d31cdb-c935-44c8-a598-c091cb944794"},{"sequence":9,"stage":"read-result-transmitted","elapsedMs":213,"requestOrdinal":2,"toolUseId":"sp_read_59d31cdb-c935-44c8-a598-c091cb944794"},{"sequence":10,"stage":"compared","elapsedMs":213},{"sequence":11,"stage":"completed","elapsedMs":213},{"sequence":12,"stage":"cleanup","elapsedMs":215}],"evidenceRefs":[{"requestOrdinal":1,"bytes":2821},{"requestOrdinal":2,"bytes":3347}],"isolation":{"uniqueConfig":true,"newSession":true,"homePreserved":true,"excludedCanaryAbsent":true,"onlyExpectedTools":true,"cleanup":true},"nativeExitCode":0,"omissions":[]},{"id":"reference-withheld","title":"Reference exists but is not transmitted without Read","fixtureHash":"37172f94f0491c90a5bda2d1f63a4b3d665e1f36f65aa3c9bc914f4967b1f50e","outcome":"pass","measurementStatus":"complete","contractStatus":"pass","observedStages":["body"],"checks":[{"id":"body-text","stage":"body","sourceFile":"skill/reference-withheld/SKILL.md","sourceSha256":"4b678801ad17634e8448890a6a6d3d10b92a24cd80632fda8dd7093ef45493fa","encoding":"UTF-8","sourceRange":{"startByte":152,"endByte":214},"source":"\nOnly this body is requested.\nReference: references/proof.txt\n","expected":"\nOnly this body is requested.\nReference: references/proof.txt\n","transmitted":"\nOnly this body is requested.\nReference: references/proof.txt\n","mode":"exact-text","normalization":"none","expectedOccurrences":1,"pass":true,"rawPass":true,"occurrences":1,"diff":[{"kind":"equal","text":"\nOnly this body is requested.\nReference: references/proof.txt\n"}],"evidenceRef":{"requestOrdinal":1,"messageIndex":0,"blockIndex":3}}],"limits":{"inputBytes":262144,"requestBytes":8388608,"turns":8,"timeoutMs":30000},"evidence":[{"sequence":1,"stage":"validate","elapsedMs":0},{"sequence":2,"stage":"isolate","elapsedMs":1},{"sequence":3,"stage":"start-endpoint","elapsedMs":18},{"sequence":4,"stage":"start-native","elapsedMs":18},{"sequence":5,"stage":"invoked","elapsedMs":18,"detail":"Explicit native /reference-withheld"},{"sequence":6,"stage":"body-observed","elapsedMs":193,"requestOrdinal":1},{"sequence":7,"stage":"compared","elapsedMs":228},{"sequence":8,"stage":"completed","elapsedMs":228},{"sequence":9,"stage":"cleanup","elapsedMs":230}],"evidenceRefs":[{"requestOrdinal":1,"bytes":2017}],"isolation":{"uniqueConfig":true,"newSession":true,"homePreserved":true,"excludedCanaryAbsent":true,"onlyExpectedTools":true,"cleanup":true},"nativeExitCode":0,"omissions":["Reference Read was not requested or measured"]},{"id":"repeated-html","title":"Repeated marker, long line and hostile HTML as text","fixtureHash":"c75a14ebd79fc81cd8a864ac7318016df14fd36134f1ed4c3ac2d17cd5cac27a","outcome":"pass","measurementStatus":"complete","contractStatus":"pass","observedStages":["body"],"checks":[{"id":"body-text","stage":"body","sourceFile":"skill/repeated-html/SKILL.md","sourceSha256":"e258b46688601030e369730a486364b93bb9a163207d8b2c1469793a4c2e88f6","encoding":"UTF-8","sourceRange":{"startByte":142,"endByte":2065},"source":"\nrepeat-me repeat-me\n\u003c/script\u003e\u003cscript\u003eglobalThis.SKILLPARCEL_ATTACK=true\u003c/script\u003e\nLong synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · \n","expected":"\nrepeat-me repeat-me\n\u003c/script\u003e\u003cscript\u003eglobalThis.SKILLPARCEL_ATTACK=true\u003c/script\u003e\nLong synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · \n","transmitted":"\nrepeat-me repeat-me\n\u003c/script\u003e\u003cscript\u003eglobalThis.SKILLPARCEL_ATTACK=true\u003c/script\u003e\nLong synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · \n","mode":"exact-text","normalization":"none","expectedOccurrences":1,"pass":true,"rawPass":true,"occurrences":1,"diff":[{"kind":"equal","text":"\nrepeat-me repeat-me\n\u003c/script\u003e\u003cscript\u003eglobalThis.SKILLPARCEL_ATTACK=true\u003c/script\u003e\nLong synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · \n"}],"evidenceRef":{"requestOrdinal":1,"messageIndex":0,"blockIndex":3}},{"id":"two-occurrences-only-in-first-request","stage":"body","sourceFile":"skill/repeated-html/SKILL.md","sourceSha256":"e258b46688601030e369730a486364b93bb9a163207d8b2c1469793a4c2e88f6","encoding":"UTF-8","sourceRange":{"startByte":142,"endByte":2065},"source":"\nrepeat-me repeat-me\n\u003c/script\u003e\u003cscript\u003eglobalThis.SKILLPARCEL_ATTACK=true\u003c/script\u003e\nLong synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · \n","expected":"repeat-me","transmitted":"\nrepeat-me repeat-me\n\u003c/script\u003e\u003cscript\u003eglobalThis.SKILLPARCEL_ATTACK=true\u003c/script\u003e\nLong synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · \n","mode":"contains-exact","normalization":"none","expectedOccurrences":2,"pass":true,"rawPass":true,"occurrences":2,"diff":[{"kind":"removed","text":"repeat-me"},{"kind":"added","text":"\nrepeat-me repeat-me\n\u003c/script\u003e\u003cscript\u003eglobalThis.SKILLPARCEL_ATTACK=true\u003c/script\u003e\nLong synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · \n"}],"evidenceRef":{"requestOrdinal":1,"messageIndex":0,"blockIndex":3}}],"limits":{"inputBytes":262144,"requestBytes":8388608,"turns":8,"timeoutMs":30000},"evidence":[{"sequence":1,"stage":"validate","elapsedMs":0},{"sequence":2,"stage":"isolate","elapsedMs":1},{"sequence":3,"stage":"start-endpoint","elapsedMs":19},{"sequence":4,"stage":"start-native","elapsedMs":19},{"sequence":5,"stage":"invoked","elapsedMs":19,"detail":"Explicit native /repeated-html"},{"sequence":6,"stage":"body-observed","elapsedMs":193,"requestOrdinal":1},{"sequence":7,"stage":"compared","elapsedMs":214},{"sequence":8,"stage":"completed","elapsedMs":214},{"sequence":9,"stage":"cleanup","elapsedMs":216}],"evidenceRefs":[{"requestOrdinal":1,"bytes":3854}],"isolation":{"uniqueConfig":true,"newSession":true,"homePreserved":true,"excludedCanaryAbsent":true,"onlyExpectedTools":true,"cleanup":true},"nativeExitCode":0,"omissions":["Reference Read was not requested or measured"]},{"id":"unicode-empty","title":"UTF-8, combining character and an empty fragment","fixtureHash":"f981b6432b07fe558d273a4e91ffb9cf1657c19bd436a72fc5935a247657bc05","outcome":"pass","measurementStatus":"complete","contractStatus":"pass","observedStages":["body"],"checks":[{"id":"body-text","stage":"body","sourceFile":"skill/unicode-empty/SKILL.md","sourceSha256":"649209f6c4bdd7cb34906165eb99e0e29b4fecc823205b55041f2e7b96c55bd9","encoding":"UTF-8","sourceRange":{"startByte":142,"endByte":221},"source":"\nПривет · 世界 · 👋 · é\n\n\u003c!-- EMPTY_BEGIN --\u003e\u003c!-- EMPTY_END --\u003e\n","expected":"\nПривет · 世界 · 👋 · é\n\n\u003c!-- EMPTY_BEGIN --\u003e\u003c!-- EMPTY_END --\u003e\n","transmitted":"\nПривет · 世界 · 👋 · é\n\n\u003c!-- EMPTY_BEGIN --\u003e\u003c!-- EMPTY_END --\u003e\n","mode":"exact-text","normalization":"none","expectedOccurrences":1,"pass":true,"rawPass":true,"occurrences":1,"diff":[{"kind":"equal","text":"\nПривет · 世界 · 👋 · é\n\n\u003c!-- EMPTY_BEGIN --\u003e\u003c!-- EMPTY_END --\u003e\n"}],"evidenceRef":{"requestOrdinal":1,"messageIndex":0,"blockIndex":3}},{"id":"empty-fragment","stage":"body","sourceFile":"skill/unicode-empty/SKILL.md","sourceSha256":"649209f6c4bdd7cb34906165eb99e0e29b4fecc823205b55041f2e7b96c55bd9","encoding":"UTF-8","sourceRange":{"startByte":202,"endByte":202},"source":"","expected":"","transmitted":"","mode":"exact-text","normalization":"none","expectedOccurrences":1,"pass":true,"rawPass":true,"occurrences":1,"diff":[],"evidenceRef":{"requestOrdinal":1,"messageIndex":0,"blockIndex":3}}],"limits":{"inputBytes":262144,"requestBytes":8388608,"turns":8,"timeoutMs":30000},"evidence":[{"sequence":1,"stage":"validate","elapsedMs":0},{"sequence":2,"stage":"isolate","elapsedMs":1},{"sequence":3,"stage":"start-endpoint","elapsedMs":17},{"sequence":4,"stage":"start-native","elapsedMs":17},{"sequence":5,"stage":"invoked","elapsedMs":17,"detail":"Explicit native /unicode-empty"},{"sequence":6,"stage":"body-observed","elapsedMs":184,"requestOrdinal":1},{"sequence":7,"stage":"compared","elapsedMs":205},{"sequence":8,"stage":"completed","elapsedMs":205},{"sequence":9,"stage":"cleanup","elapsedMs":207}],"evidenceRefs":[{"requestOrdinal":1,"bytes":2010}],"isolation":{"uniqueConfig":true,"newSession":true,"homePreserved":true,"excludedCanaryAbsent":true,"onlyExpectedTools":true,"cleanup":true},"nativeExitCode":0,"omissions":["Reference Read was not requested or measured"]}],"exitCode":1,"omissions":["Model response quality and voluntary reference selection are not measured","No other client, default interactive mode, OS or native build is certified","Raw HTTP, vendor instructions, headers, CLI stdout and user profiles are omitted"]}</script><script>(() => {
+  const report = JSON.parse(document.getElementById("report-data").textContent);
+  const byId = (id) => document.getElementById(id);
+  const node = (tag, text, className) => {
+    const n = document.createElement(tag);
+    if (text !== undefined)
+      n.textContent = typeof text === "string" ? visible(text) : text;
+    if (className) n.className = className;
+    return n;
+  };
+  // Display escapes are separate from the original measured strings.
+  const visible = (s) =>
+    Array.from(s, (c) => {
+      const code = c.codePointAt(0);
+      if (code === 13) return "␍";
+      if (
+        (code < 32 && code !== 9 && code !== 10) ||
+        (code >= 127 && code <= 159) ||
+        (code >= 0x202a && code <= 0x202e) ||
+        (code >= 0x2066 && code <= 0x2069) ||
+        code === 0x200e ||
+        code === 0x200f
+      )
+        return "\\u" + code.toString(16).padStart(4, "0");
+      return c;
+    }).join("");
+  byId("coverage").textContent =
+    `Claude Code ${report.nativeVersion} · ${report.OS}/${report.arch} · ${report.coverage}`;
+  byId("recorded").textContent =
+    (report.recorded
+      ? "RECORDED synthetic captured run; this does not verify this machine. "
+      : "Synthetic captured run. ") + report.recordedAt;
+  byId("network").textContent = report.networkMode;
+  byId("versions").textContent =
+    `SkillParcel ${report.toolVersion} · adapter ${report.adapterVersion}` +
+    (report.sourceCommit
+      ? ` · source ${report.sourceCommit}`
+      : " · source commit not supplied");
+  for (const omission of report.omissions)
+    byId("omissions").append(node("li", omission));
+  let selected = -1;
+  function detail(index) {
+    selected = index;
+    const c = report.cases[index],
+      host = byId("detail");
+    host.replaceChildren();
+    host.append(node("h2", c.title));
+    host.firstChild.id = "case-heading";
+    host.append(
+      node(
+        "p",
+        `${c.outcome.toUpperCase()} · measurement ${c.measurementStatus} · contract ${c.contractStatus}`,
+        "status " + c.outcome,
+      ),
+    );
+    if (c.reason)
+      host.append(
+        node(
+          "p",
+          `${c.reasonCode}: ${c.reason}. Review the fixture or adapter support before rerunning.`,
+          "reason",
+        ),
+      );
+    host.append(
+      node("p", `Fixture SHA-256 ${c.fixtureHash || "unavailable"}`, "meta"),
+    );
+    for (const check of c.checks) {
+      const article = node("article", undefined, "check");
+      article.append(node("h3", check.id));
+      article.append(
+        node(
+          "p",
+          `${check.stage} · ${check.sourceFile} · bytes ${check.sourceRange.startByte}–${check.sourceRange.endByte} · UTF-8`,
+          "meta",
+        ),
+      );
+      article.append(
+        node(
+          "p",
+          `${check.mode} · normalization ${check.normalization} · raw ${check.rawPass === null ? "unmeasured" : check.rawPass ? "pass" : "different"} · verdict ${check.pass === null ? "unmeasured" : check.pass ? "pass" : "violation"}`,
+          "meta",
+        ),
+      );
+      const panes = node("div", undefined, "panes");
+      for (const [label, text] of [
+        ["Source bytes (decoded)", check.source],
+        ["Transmitted API fragment", check.transmitted ?? "Stage not measured"],
+      ]) {
+        const pane = node("div");
+        pane.append(node("h3", label), node("pre", visible(text)));
+        panes.append(pane);
+      }
+      article.append(panes);
+      const gold = node("details");
+      gold.append(
+        node("summary", "Author contract / expected text"),
+        node("pre", visible(check.expected)),
+      );
+      article.append(gold);
+      if (check.diff.length) {
+        article.append(node("h3", "Expected → transmitted diff"));
+        const pre = node("pre", undefined, "diff");
+        for (const diff of check.diff)
+          pre.append(
+            node(
+              "span",
+              (diff.kind === "added"
+                ? "+ "
+                : diff.kind === "removed"
+                  ? "- "
+                  : "  ") + visible(diff.text),
+              diff.kind,
+            ),
+          );
+        article.append(pre);
+      }
+      if (check.evidenceRef)
+        article.append(
+          node(
+            "p",
+            `request #${check.evidenceRef.requestOrdinal} · user message ${check.evidenceRef.messageIndex}, block ${check.evidenceRef.blockIndex}` +
+              (check.evidenceRef.toolUseId
+                ? ` · ${check.evidenceRef.toolUseId}`
+                : ""),
+            "meta",
+          ),
+        );
+      host.append(article);
+    }
+    const evidence = node("details");
+    evidence.append(
+      node("summary", "Stage evidence (" + c.evidence.length + " events)"),
+    );
+    const list = node("ol", undefined, "evidence");
+    for (const e of c.evidence)
+      list.append(
+        node(
+          "li",
+          `+${e.elapsedMs} ms · ${e.stage}` +
+            (e.requestOrdinal ? ` · request #${e.requestOrdinal}` : "") +
+            (e.toolUseId ? ` · ${e.toolUseId}` : "") +
+            (e.detail ? ` · ${e.detail}` : ""),
+        ),
+      );
+    evidence.append(list);
+    host.append(evidence);
+    for (const omitted of c.omissions) host.append(node("p", omitted, "meta"));
+    renderRows();
+  }
+  function renderRows() {
+    const filter = byId("filter").value;
+    const tbody = byId("cases");
+    tbody.replaceChildren();
+    let shown = 0;
+    report.cases.forEach((c, index) => {
+      if (filter !== "all" && c.outcome !== filter) return;
+      shown++;
+      const tr = node("tr");
+      tr.setAttribute("aria-selected", String(index === selected));
+      const title = node("td");
+      const button = node("button", c.title);
+      button.type = "button";
+      button.setAttribute("aria-label", "Select case " + c.id);
+      button.addEventListener("click", () => {
+        detail(index);
+        byId("case-heading").setAttribute("tabindex", "-1");
+        byId("case-heading").focus();
+      });
+      title.append(button, node("div", c.id, "meta"));
+      tr.append(
+        title,
+        node("td", c.outcome, "status " + c.outcome),
+        node("td", c.observedStages.join(" + ") || "unmeasured"),
+        node(
+          "td",
+          `${c.checks.filter((x) => x.pass !== null).length}/${c.checks.length}`,
+        ),
+      );
+      tbody.append(tr);
+    });
+    byId("empty").hidden = shown !== 0;
+    byId("summary").textContent =
+      `${shown} visible / ${report.cases.length} cases · exit ${report.exitCode} · controls are escaped for display; text comparison used the original characters`;
+  }
+  byId("filter").addEventListener("change", () => {
+    const index = report.cases.findIndex(
+      (c) =>
+        byId("filter").value === "all" || c.outcome === byId("filter").value,
+    );
+    if (index >= 0) detail(index);
+    else {
+      selected = -1;
+      byId("detail").replaceChildren(node("p", "No measured case selected."));
+      renderRows();
+    }
+  });
+  byId("copy").addEventListener("click", async () => {
+    const text = byId("command").value;
+    try {
+      await navigator.clipboard.writeText(text);
+      byId("copy-status").textContent = "Command copied.";
+    } catch {
+      document.querySelector(".fallback").hidden = false;
+      byId("command").focus();
+      byId("command").select();
+      byId("copy-status").textContent = "Select and copy the command above.";
+    }
+  });
+  if (report.cases.length)
+    detail(
+      Math.max(
+        0,
+        report.cases.findIndex((c) => c.outcome === "violation"),
+      ),
+    );
+  else {
+    byId("detail").append(
+      node("p", "No cases were measured. This report cannot pass."),
+    );
+    renderRows();
+  }
+})();
+</script></body></html>

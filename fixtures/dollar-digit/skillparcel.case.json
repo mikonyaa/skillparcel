@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "dollar-digit",
+  "title": "Dollar digits with seven explicit arguments",
+  "description": "Original synthetic, intentionally prepared local fixture. No downloaded skill code executes.",
+  "tags": [
+    "synthetic",
+    "negative-control"
+  ],
+  "client": {
+    "adapter": "claude-code",
+    "supportedVersion": "2.1.280"
+  },
+  "skillDirectory": "skill/dollar-digit",
+  "invocation": {
+    "kind": "explicit-command",
+    "commandName": "dollar-digit",
+    "args": [
+      "one",
+      "two",
+      "three",
+      "four",
+      "five",
+      "six",
+      "seven"
+    ]
+  },
+  "expectedStages": {
+    "body": "required",
+    "reference-read": "optional"
+  },
+  "checks": [
+    {
+      "id": "body-text",
+      "stage": "body",
+      "sourceFile": "skill/dollar-digit/SKILL.md",
+      "sentinels": {
+        "begin": "<!-- SP_dollar-digit_BEGIN -->",
+        "end": "<!-- SP_dollar-digit_END -->"
+      },
+      "expectedText": "\nFormula =B5*(1+$B$6)\nSecond: $1\nSeventh: $6\n",
+      "mode": "exact-text",
+      "expectedOccurrences": 1,
+      "normalization": "none"
+    }
+  ],
+  "limits": {
+    "inputBytes": 262144,
+    "requestBytes": 8388608,
+    "turns": 8,
+    "timeoutMs": 30000
+  },
+  "golden": {
+    "author": "mikonyaa / SkillParcel synthetic corpus",
+    "basis": "Author requires literal dollars, as in a formula or shell snippet. An indexed substitution is a measured literal-contract violation, not a semantic evaluation.",
+    "createdAt": "2026-10-11T21:37:09.553Z"
+  }
+}

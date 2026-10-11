@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "id": "argument-substitution",
+  "title": "Intentional indexed and full argument substitution",
+  "description": "Original synthetic, intentionally prepared local fixture. No downloaded skill code executes.",
+  "tags": [
+    "synthetic"
+  ],
+  "client": {
+    "adapter": "claude-code",
+    "supportedVersion": "2.1.280"
+  },
+  "skillDirectory": "skill/argument-substitution",
+  "invocation": {
+    "kind": "explicit-command",
+    "commandName": "argument-substitution",
+    "args": [
+      "north",
+      "south"
+    ]
+  },
+  "expectedStages": {
+    "body": "required",
+    "reference-read": "optional"
+  },
+  "checks": [
+    {
+      "id": "body-text",
+      "stage": "body",
+      "sourceFile": "skill/argument-substitution/SKILL.md",
+      "sentinels": {
+        "begin": "<!-- SP_argument-substitution_BEGIN -->",
+        "end": "<!-- SP_argument-substitution_END -->"
+      },
+      "expectedText": "\nAll: north south\nFirst: north\nSecond: south\n",
+      "mode": "exact-text",
+      "expectedOccurrences": 1,
+      "normalization": "none"
+    }
+  ],
+  "limits": {
+    "inputBytes": 262144,
+    "requestBytes": 8388608,
+    "turns": 8,
+    "timeoutMs": 30000
+  },
+  "golden": {
+    "author": "mikonyaa / SkillParcel synthetic corpus",
+    "basis": "Author explicitly requests documented argument substitution.",
+    "createdAt": "2026-10-11T21:37:09.553Z"
+  }
+}

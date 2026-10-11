@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-withheld",
+  "title": "Reference exists but is not transmitted without Read",
+  "description": "Original synthetic, intentionally prepared local fixture. No downloaded skill code executes.",
+  "tags": [
+    "synthetic"
+  ],
+  "client": {
+    "adapter": "claude-code",
+    "supportedVersion": "2.1.280"
+  },
+  "skillDirectory": "skill/reference-withheld",
+  "invocation": {
+    "kind": "explicit-command",
+    "commandName": "reference-withheld",
+    "args": []
+  },
+  "expectedStages": {
+    "body": "required",
+    "reference-read": "optional"
+  },
+  "checks": [
+    {
+      "id": "body-text",
+      "stage": "body",
+      "sourceFile": "skill/reference-withheld/SKILL.md",
+      "sentinels": {
+        "begin": "<!-- SP_reference-withheld_BEGIN -->",
+        "end": "<!-- SP_reference-withheld_END -->"
+      },
+      "expectedText": "\nOnly this body is requested.\nReference: references/proof.txt\n",
+      "mode": "exact-text",
+      "expectedOccurrences": 1,
+      "normalization": "none"
+    }
+  ],
+  "referenceRead": {
+    "path": "skill/reference-withheld/references/proof.txt",
+    "request": false,
+    "permission": "allow"
+  },
+  "limits": {
+    "inputBytes": 262144,
+    "requestBytes": 8388608,
+    "turns": 8,
+    "timeoutMs": 30000
+  },
+  "golden": {
+    "author": "mikonyaa / SkillParcel synthetic corpus",
+    "basis": "Author requires exact source text between its explicit sentinels, before any native run.",
+    "createdAt": "2026-10-11T21:37:09.553Z"
+  }
+}

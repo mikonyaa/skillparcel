@@ -1,0 +1,317 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "tags": {
+      "maxItems": 20,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+      }
+    },
+    "client": {
+      "type": "object",
+      "properties": {
+        "adapter": {
+          "type": "string",
+          "const": "claude-code"
+        },
+        "supportedVersion": {
+          "type": "string",
+          "const": "2.1.280"
+        }
+      },
+      "required": [
+        "adapter",
+        "supportedVersion"
+      ],
+      "additionalProperties": false
+    },
+    "skillDirectory": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240
+    },
+    "invocation": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "explicit-command"
+        },
+        "commandName": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+        },
+        "args": {
+          "maxItems": 20,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 1000
+          }
+        }
+      },
+      "required": [
+        "kind",
+        "commandName",
+        "args"
+      ],
+      "additionalProperties": false
+    },
+    "expectedStages": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "type": "string",
+          "const": "required"
+        },
+        "reference-read": {
+          "type": "string",
+          "enum": [
+            "required",
+            "optional"
+          ]
+        }
+      },
+      "required": [
+        "body",
+        "reference-read"
+      ],
+      "additionalProperties": false
+    },
+    "checks": {
+      "minItems": 1,
+      "maxItems": 30,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "body",
+              "reference-read"
+            ]
+          },
+          "sourceFile": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "sourceRange": {
+            "type": "object",
+            "properties": {
+              "startByte": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "endByte": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "startByte",
+              "endByte"
+            ],
+            "additionalProperties": false
+          },
+          "sentinels": {
+            "type": "object",
+            "properties": {
+              "begin": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "end": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "required": [
+              "begin",
+              "end"
+            ],
+            "additionalProperties": false
+          },
+          "expectedText": {
+            "type": "string",
+            "maxLength": 131072
+          },
+          "expectedFile": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "exact-text",
+              "contains-exact"
+            ]
+          },
+          "expectedOccurrences": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "normalization": {
+            "default": "none",
+            "type": "string",
+            "enum": [
+              "none",
+              "crlf-to-lf"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "stage",
+          "sourceFile",
+          "mode",
+          "expectedOccurrences",
+          "normalization"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "referenceRead": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "request": {
+          "default": true,
+          "type": "boolean"
+        },
+        "permission": {
+          "default": "allow",
+          "type": "string",
+          "enum": [
+            "allow",
+            "deny"
+          ]
+        }
+      },
+      "required": [
+        "path",
+        "request",
+        "permission"
+      ],
+      "additionalProperties": false
+    },
+    "limits": {
+      "default": {
+        "inputBytes": 262144,
+        "requestBytes": 8388608,
+        "turns": 8,
+        "timeoutMs": 30000
+      },
+      "type": "object",
+      "properties": {
+        "inputBytes": {
+          "default": 262144,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        },
+        "requestBytes": {
+          "default": 8388608,
+          "type": "integer",
+          "minimum": 1024,
+          "maximum": 8388608
+        },
+        "turns": {
+          "default": 8,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "timeoutMs": {
+          "default": 30000,
+          "type": "integer",
+          "minimum": 500,
+          "maximum": 90000
+        }
+      },
+      "required": [
+        "inputBytes",
+        "requestBytes",
+        "turns",
+        "timeoutMs"
+      ],
+      "additionalProperties": false
+    },
+    "golden": {
+      "type": "object",
+      "properties": {
+        "author": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+        }
+      },
+      "required": [
+        "author",
+        "basis",
+        "createdAt"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "id",
+    "title",
+    "description",
+    "tags",
+    "client",
+    "skillDirectory",
+    "invocation",
+    "expectedStages",
+    "checks",
+    "limits",
+    "golden"
+  ],
+  "additionalProperties": false
+}

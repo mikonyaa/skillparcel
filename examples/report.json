@@ -1,0 +1,1442 @@
+{
+  "schemaVersion": 1,
+  "toolVersion": "0.1.0",
+  "adapterVersion": "1.0.0",
+  "nativeVersion": "2.1.280",
+  "nativeSha256": "387a5c5dcdbb815085edf0baf79591f9d8894efe922bceaf3d75b1b08055229d",
+  "OS": "darwin",
+  "arch": "arm64",
+  "recordedAt": "2026-10-11T22:00:49.556Z",
+  "invocationMode": "explicit-command; bare + add-dir",
+  "networkMode": "127.0.0.1 synthetic Messages endpoint; no OS egress confinement",
+  "coverage": "native-verified",
+  "recorded": true,
+  "cases": [
+    {
+      "id": "argument-substitution",
+      "title": "Intentional indexed and full argument substitution",
+      "fixtureHash": "1e5c1064434b56b9c5f9e7f609c37232431a42b0e45a63503fd86c365873bbc3",
+      "outcome": "pass",
+      "measurementStatus": "complete",
+      "contractStatus": "pass",
+      "observedStages": [
+        "body"
+      ],
+      "checks": [
+        {
+          "id": "body-text",
+          "stage": "body",
+          "sourceFile": "skill/argument-substitution/SKILL.md",
+          "sourceSha256": "7379e8fc1af455faaff132579ef96ef37331ffb06d3c16cf8d372af5c4eb7349",
+          "encoding": "UTF-8",
+          "sourceRange": {
+            "startByte": 186,
+            "endByte": 235
+          },
+          "source": "\nAll: $ARGUMENTS\nFirst: $0\nSecond: $ARGUMENTS[1]\n",
+          "expected": "\nAll: north south\nFirst: north\nSecond: south\n",
+          "transmitted": "\nAll: north south\nFirst: north\nSecond: south\n",
+          "mode": "exact-text",
+          "normalization": "none",
+          "expectedOccurrences": 1,
+          "pass": true,
+          "rawPass": true,
+          "occurrences": 1,
+          "diff": [
+            {
+              "kind": "equal",
+              "text": "\nAll: north south\nFirst: north\nSecond: south\n"
+            }
+          ],
+          "evidenceRef": {
+            "requestOrdinal": 1,
+            "messageIndex": 0,
+            "blockIndex": 3
+          }
+        }
+      ],
+      "limits": {
+        "inputBytes": 262144,
+        "requestBytes": 8388608,
+        "turns": 8,
+        "timeoutMs": 30000
+      },
+      "evidence": [
+        {
+          "sequence": 1,
+          "stage": "validate",
+          "elapsedMs": 0
+        },
+        {
+          "sequence": 2,
+          "stage": "isolate",
+          "elapsedMs": 1
+        },
+        {
+          "sequence": 3,
+          "stage": "start-endpoint",
+          "elapsedMs": 18
+        },
+        {
+          "sequence": 4,
+          "stage": "start-native",
+          "elapsedMs": 18
+        },
+        {
+          "sequence": 5,
+          "stage": "invoked",
+          "elapsedMs": 18,
+          "detail": "Explicit native /argument-substitution"
+        },
+        {
+          "sequence": 6,
+          "stage": "body-observed",
+          "elapsedMs": 195,
+          "requestOrdinal": 1
+        },
+        {
+          "sequence": 7,
+          "stage": "compared",
+          "elapsedMs": 217
+        },
+        {
+          "sequence": 8,
+          "stage": "completed",
+          "elapsedMs": 217
+        },
+        {
+          "sequence": 9,
+          "stage": "cleanup",
+          "elapsedMs": 219
+        }
+      ],
+      "evidenceRefs": [
+        {
+          "requestOrdinal": 1,
+          "bytes": 2058
+        }
+      ],
+      "isolation": {
+        "uniqueConfig": true,
+        "newSession": true,
+        "homePreserved": true,
+        "excludedCanaryAbsent": true,
+        "onlyExpectedTools": true,
+        "cleanup": true
+      },
+      "nativeExitCode": 0,
+      "omissions": [
+        "Reference Read was not requested or measured"
+      ]
+    },
+    {
+      "id": "crlf",
+      "title": "CRLF with declared CRLF → LF normalization",
+      "fixtureHash": "935d4651ad4e453f235a0d6b84d1f9e94bb0a1ab00f44872e0382f763f8d2e3c",
+      "outcome": "pass",
+      "measurementStatus": "complete",
+      "contractStatus": "pass",
+      "observedStages": [
+        "body"
+      ],
+      "checks": [
+        {
+          "id": "body-text",
+          "stage": "body",
+          "sourceFile": "skill/crlf/SKILL.md",
+          "sourceSha256": "fea4accf77f00367aefa0c092ce473d9ccc30c8a51eb0dcb1d7c57c5f8fdde73",
+          "encoding": "UTF-8",
+          "sourceRange": {
+            "startByte": 129,
+            "endByte": 156
+          },
+          "source": "\r\nFirst line\r\nSecond line\r\n",
+          "expected": "\r\nFirst line\r\nSecond line\r\n",
+          "transmitted": "\r\nFirst line\r\nSecond line\r\n",
+          "mode": "exact-text",
+          "normalization": "crlf-to-lf",
+          "expectedOccurrences": 1,
+          "pass": true,
+          "rawPass": true,
+          "occurrences": 1,
+          "diff": [
+            {
+              "kind": "equal",
+              "text": "\r\nFirst line\r\nSecond line\r\n"
+            }
+          ],
+          "evidenceRef": {
+            "requestOrdinal": 1,
+            "messageIndex": 0,
+            "blockIndex": 3
+          }
+        }
+      ],
+      "limits": {
+        "inputBytes": 262144,
+        "requestBytes": 8388608,
+        "turns": 8,
+        "timeoutMs": 30000
+      },
+      "evidence": [
+        {
+          "sequence": 1,
+          "stage": "validate",
+          "elapsedMs": 0
+        },
+        {
+          "sequence": 2,
+          "stage": "isolate",
+          "elapsedMs": 0
+        },
+        {
+          "sequence": 3,
+          "stage": "start-endpoint",
+          "elapsedMs": 16
+        },
+        {
+          "sequence": 4,
+          "stage": "start-native",
+          "elapsedMs": 16
+        },
+        {
+          "sequence": 5,
+          "stage": "invoked",
+          "elapsedMs": 16,
+          "detail": "Explicit native /crlf"
+        },
+        {
+          "sequence": 6,
+          "stage": "body-observed",
+          "elapsedMs": 194,
+          "requestOrdinal": 1
+        },
+        {
+          "sequence": 7,
+          "stage": "compared",
+          "elapsedMs": 216
+        },
+        {
+          "sequence": 8,
+          "stage": "completed",
+          "elapsedMs": 216
+        },
+        {
+          "sequence": 9,
+          "stage": "cleanup",
+          "elapsedMs": 218
+        }
+      ],
+      "evidenceRefs": [
+        {
+          "requestOrdinal": 1,
+          "bytes": 1917
+        }
+      ],
+      "isolation": {
+        "uniqueConfig": true,
+        "newSession": true,
+        "homePreserved": true,
+        "excludedCanaryAbsent": true,
+        "onlyExpectedTools": true,
+        "cleanup": true
+      },
+      "nativeExitCode": 0,
+      "omissions": [
+        "Reference Read was not requested or measured"
+      ]
+    },
+    {
+      "id": "dollar-digit",
+      "title": "Dollar digits with seven explicit arguments",
+      "fixtureHash": "05d4d1e13f8652f616ba6a1afb6e68611696c015018b103f4304e9fb4cc76d5b",
+      "outcome": "violation",
+      "measurementStatus": "complete",
+      "contractStatus": "violation",
+      "observedStages": [
+        "body"
+      ],
+      "checks": [
+        {
+          "id": "body-text",
+          "stage": "body",
+          "sourceFile": "skill/dollar-digit/SKILL.md",
+          "sourceSha256": "f80dd34f59eb74b7bebd3f226131d32f29366183221c8880922508087516d25a",
+          "encoding": "UTF-8",
+          "sourceRange": {
+            "startByte": 140,
+            "endByte": 185
+          },
+          "source": "\nFormula =B5*(1+$B$6)\nSecond: $1\nSeventh: $6\n",
+          "expected": "\nFormula =B5*(1+$B$6)\nSecond: $1\nSeventh: $6\n",
+          "transmitted": "\nFormula =B5*(1+$Bseven)\nSecond: two\nSeventh: seven\n",
+          "mode": "exact-text",
+          "normalization": "none",
+          "expectedOccurrences": 1,
+          "pass": false,
+          "rawPass": false,
+          "occurrences": 0,
+          "diff": [
+            {
+              "kind": "equal",
+              "text": "\n"
+            },
+            {
+              "kind": "removed",
+              "text": "Formula =B5*(1+$B$6)\nSecond: $1\nSeventh: $6\n"
+            },
+            {
+              "kind": "added",
+              "text": "Formula =B5*(1+$Bseven)\nSecond: two\nSeventh: seven\n"
+            }
+          ],
+          "evidenceRef": {
+            "requestOrdinal": 1,
+            "messageIndex": 0,
+            "blockIndex": 3
+          }
+        }
+      ],
+      "limits": {
+        "inputBytes": 262144,
+        "requestBytes": 8388608,
+        "turns": 8,
+        "timeoutMs": 30000
+      },
+      "evidence": [
+        {
+          "sequence": 1,
+          "stage": "validate",
+          "elapsedMs": 0
+        },
+        {
+          "sequence": 2,
+          "stage": "isolate",
+          "elapsedMs": 0
+        },
+        {
+          "sequence": 3,
+          "stage": "start-endpoint",
+          "elapsedMs": 17
+        },
+        {
+          "sequence": 4,
+          "stage": "start-native",
+          "elapsedMs": 17
+        },
+        {
+          "sequence": 5,
+          "stage": "invoked",
+          "elapsedMs": 17,
+          "detail": "Explicit native /dollar-digit"
+        },
+        {
+          "sequence": 6,
+          "stage": "body-observed",
+          "elapsedMs": 193,
+          "requestOrdinal": 1
+        },
+        {
+          "sequence": 7,
+          "stage": "compared",
+          "elapsedMs": 213
+        },
+        {
+          "sequence": 8,
+          "stage": "completed",
+          "elapsedMs": 213
+        },
+        {
+          "sequence": 9,
+          "stage": "cleanup",
+          "elapsedMs": 215
+        }
+      ],
+      "evidenceRefs": [
+        {
+          "requestOrdinal": 1,
+          "bytes": 2042
+        }
+      ],
+      "isolation": {
+        "uniqueConfig": true,
+        "newSession": true,
+        "homePreserved": true,
+        "excludedCanaryAbsent": true,
+        "onlyExpectedTools": true,
+        "cleanup": true
+      },
+      "nativeExitCode": 0,
+      "omissions": [
+        "Reference Read was not requested or measured"
+      ]
+    },
+    {
+      "id": "escaped-dollar",
+      "title": "Escaped literal formula and awk placeholder",
+      "fixtureHash": "080247759ef4291c4128a46480bc5f10407791ad7b9e457079bc37ebe03d6826",
+      "outcome": "pass",
+      "measurementStatus": "complete",
+      "contractStatus": "pass",
+      "observedStages": [
+        "body"
+      ],
+      "checks": [
+        {
+          "id": "body-text",
+          "stage": "body",
+          "sourceFile": "skill/escaped-dollar/SKILL.md",
+          "sourceSha256": "e061acbd17b190b42f6d8decfa9b1415248395788c0d1e3ac2b465a2538e2f5a",
+          "encoding": "UTF-8",
+          "sourceRange": {
+            "startByte": 144,
+            "endByte": 197
+          },
+          "source": "\nFormula =B5*(1+$B\\$6)\nawk '{print \\$1}'\nLiteral \\$6\n",
+          "expected": "\nFormula =B5*(1+$B$6)\nawk '{print $1}'\nLiteral $6\n",
+          "transmitted": "\nFormula =B5*(1+$B$6)\nawk '{print $1}'\nLiteral $6\n",
+          "mode": "exact-text",
+          "normalization": "none",
+          "expectedOccurrences": 1,
+          "pass": true,
+          "rawPass": true,
+          "occurrences": 1,
+          "diff": [
+            {
+              "kind": "equal",
+              "text": "\nFormula =B5*(1+$B$6)\nawk '{print $1}'\nLiteral $6\n"
+            }
+          ],
+          "evidenceRef": {
+            "requestOrdinal": 1,
+            "messageIndex": 0,
+            "blockIndex": 3
+          }
+        }
+      ],
+      "limits": {
+        "inputBytes": 262144,
+        "requestBytes": 8388608,
+        "turns": 8,
+        "timeoutMs": 30000
+      },
+      "evidence": [
+        {
+          "sequence": 1,
+          "stage": "validate",
+          "elapsedMs": 0
+        },
+        {
+          "sequence": 2,
+          "stage": "isolate",
+          "elapsedMs": 1
+        },
+        {
+          "sequence": 3,
+          "stage": "start-endpoint",
+          "elapsedMs": 16
+        },
+        {
+          "sequence": 4,
+          "stage": "start-native",
+          "elapsedMs": 16
+        },
+        {
+          "sequence": 5,
+          "stage": "invoked",
+          "elapsedMs": 16,
+          "detail": "Explicit native /escaped-dollar"
+        },
+        {
+          "sequence": 6,
+          "stage": "body-observed",
+          "elapsedMs": 185,
+          "requestOrdinal": 1
+        },
+        {
+          "sequence": 7,
+          "stage": "compared",
+          "elapsedMs": 205
+        },
+        {
+          "sequence": 8,
+          "stage": "completed",
+          "elapsedMs": 205
+        },
+        {
+          "sequence": 9,
+          "stage": "cleanup",
+          "elapsedMs": 207
+        }
+      ],
+      "evidenceRefs": [
+        {
+          "requestOrdinal": 1,
+          "bytes": 2098
+        }
+      ],
+      "isolation": {
+        "uniqueConfig": true,
+        "newSession": true,
+        "homePreserved": true,
+        "excludedCanaryAbsent": true,
+        "onlyExpectedTools": true,
+        "cleanup": true
+      },
+      "nativeExitCode": 0,
+      "omissions": [
+        "Reference Read was not requested or measured"
+      ]
+    },
+    {
+      "id": "intentional-mismatch",
+      "title": "An author contract catches our changed source",
+      "fixtureHash": "eee23238006fa4cc4758d52716ccba3c62b6076521b7148e286ebe8c9ad4b8f0",
+      "outcome": "violation",
+      "measurementStatus": "complete",
+      "contractStatus": "violation",
+      "observedStages": [
+        "body"
+      ],
+      "checks": [
+        {
+          "id": "body-text",
+          "stage": "body",
+          "sourceFile": "skill/intentional-mismatch/SKILL.md",
+          "sourceSha256": "a9ec816ac50f976c112c5d931fe407c8ba5947362143c97fb73dd965095ca026",
+          "encoding": "UTF-8",
+          "sourceRange": {
+            "startByte": 156,
+            "endByte": 181
+          },
+          "source": "\nAuthor-owned revision B\n",
+          "expected": "\nAuthor-owned revision A\n",
+          "transmitted": "\nAuthor-owned revision B\n",
+          "mode": "exact-text",
+          "normalization": "none",
+          "expectedOccurrences": 1,
+          "pass": false,
+          "rawPass": false,
+          "occurrences": 0,
+          "diff": [
+            {
+              "kind": "equal",
+              "text": "\n"
+            },
+            {
+              "kind": "removed",
+              "text": "Author-owned revision A\n"
+            },
+            {
+              "kind": "added",
+              "text": "Author-owned revision B\n"
+            }
+          ],
+          "evidenceRef": {
+            "requestOrdinal": 1,
+            "messageIndex": 0,
+            "blockIndex": 3
+          }
+        }
+      ],
+      "limits": {
+        "inputBytes": 262144,
+        "requestBytes": 8388608,
+        "turns": 8,
+        "timeoutMs": 30000
+      },
+      "evidence": [
+        {
+          "sequence": 1,
+          "stage": "validate",
+          "elapsedMs": 0
+        },
+        {
+          "sequence": 2,
+          "stage": "isolate",
+          "elapsedMs": 0
+        },
+        {
+          "sequence": 3,
+          "stage": "start-endpoint",
+          "elapsedMs": 16
+        },
+        {
+          "sequence": 4,
+          "stage": "start-native",
+          "elapsedMs": 16
+        },
+        {
+          "sequence": 5,
+          "stage": "invoked",
+          "elapsedMs": 16,
+          "detail": "Explicit native /intentional-mismatch"
+        },
+        {
+          "sequence": 6,
+          "stage": "body-observed",
+          "elapsedMs": 182,
+          "requestOrdinal": 1
+        },
+        {
+          "sequence": 7,
+          "stage": "compared",
+          "elapsedMs": 203
+        },
+        {
+          "sequence": 8,
+          "stage": "completed",
+          "elapsedMs": 203
+        },
+        {
+          "sequence": 9,
+          "stage": "cleanup",
+          "elapsedMs": 205
+        }
+      ],
+      "evidenceRefs": [
+        {
+          "requestOrdinal": 1,
+          "bytes": 1989
+        }
+      ],
+      "isolation": {
+        "uniqueConfig": true,
+        "newSession": true,
+        "homePreserved": true,
+        "excludedCanaryAbsent": true,
+        "onlyExpectedTools": true,
+        "cleanup": true
+      },
+      "nativeExitCode": 0,
+      "omissions": [
+        "Reference Read was not requested or measured"
+      ]
+    },
+    {
+      "id": "lf",
+      "title": "LF bytes with exact comparison",
+      "fixtureHash": "9bdcf191afa798106e2e908cb1de1d40ebcb4bb3da3676b9b0067108820a8f68",
+      "outcome": "pass",
+      "measurementStatus": "complete",
+      "contractStatus": "pass",
+      "observedStages": [
+        "body"
+      ],
+      "checks": [
+        {
+          "id": "body-text",
+          "stage": "body",
+          "sourceFile": "skill/lf/SKILL.md",
+          "sourceSha256": "4f437cad956199efe6db8ddd151c94afd2b91064e6c3ccc3dab130c1a98ed16b",
+          "encoding": "UTF-8",
+          "sourceRange": {
+            "startByte": 120,
+            "endByte": 144
+          },
+          "source": "\nFirst line\nSecond line\n",
+          "expected": "\nFirst line\nSecond line\n",
+          "transmitted": "\nFirst line\nSecond line\n",
+          "mode": "exact-text",
+          "normalization": "none",
+          "expectedOccurrences": 1,
+          "pass": true,
+          "rawPass": true,
+          "occurrences": 1,
+          "diff": [
+            {
+              "kind": "equal",
+              "text": "\nFirst line\nSecond line\n"
+            }
+          ],
+          "evidenceRef": {
+            "requestOrdinal": 1,
+            "messageIndex": 0,
+            "blockIndex": 3
+          }
+        }
+      ],
+      "limits": {
+        "inputBytes": 262144,
+        "requestBytes": 8388608,
+        "turns": 8,
+        "timeoutMs": 30000
+      },
+      "evidence": [
+        {
+          "sequence": 1,
+          "stage": "validate",
+          "elapsedMs": 0
+        },
+        {
+          "sequence": 2,
+          "stage": "isolate",
+          "elapsedMs": 1
+        },
+        {
+          "sequence": 3,
+          "stage": "start-endpoint",
+          "elapsedMs": 16
+        },
+        {
+          "sequence": 4,
+          "stage": "start-native",
+          "elapsedMs": 16
+        },
+        {
+          "sequence": 5,
+          "stage": "invoked",
+          "elapsedMs": 16,
+          "detail": "Explicit native /lf"
+        },
+        {
+          "sequence": 6,
+          "stage": "body-observed",
+          "elapsedMs": 181,
+          "requestOrdinal": 1
+        },
+        {
+          "sequence": 7,
+          "stage": "compared",
+          "elapsedMs": 202
+        },
+        {
+          "sequence": 8,
+          "stage": "completed",
+          "elapsedMs": 202
+        },
+        {
+          "sequence": 9,
+          "stage": "cleanup",
+          "elapsedMs": 204
+        }
+      ],
+      "evidenceRefs": [
+        {
+          "requestOrdinal": 1,
+          "bytes": 1899
+        }
+      ],
+      "isolation": {
+        "uniqueConfig": true,
+        "newSession": true,
+        "homePreserved": true,
+        "excludedCanaryAbsent": true,
+        "onlyExpectedTools": true,
+        "cleanup": true
+      },
+      "nativeExitCode": 0,
+      "omissions": [
+        "Reference Read was not requested or measured"
+      ]
+    },
+    {
+      "id": "literal",
+      "title": "A literal through the native loader",
+      "fixtureHash": "523b571d4587cfc4f56d6d130b1d6bcbc7dbfa0263dbf6fd4225e5e5c45939bf",
+      "outcome": "pass",
+      "measurementStatus": "complete",
+      "contractStatus": "pass",
+      "observedStages": [
+        "body"
+      ],
+      "checks": [
+        {
+          "id": "body-text",
+          "stage": "body",
+          "sourceFile": "skill/literal/SKILL.md",
+          "sourceSha256": "28e66bf6f9f5e931c942e56a956d07c108d1deb0fb0279d16f7e1bf20bf4fb43",
+          "encoding": "UTF-8",
+          "sourceRange": {
+            "startByte": 130,
+            "endByte": 204
+          },
+          "source": "\nSkillParcel original synthetic literal: orchard-73.\nFormula =B5*(1+$B$6)\n",
+          "expected": "\nSkillParcel original synthetic literal: orchard-73.\nFormula =B5*(1+$B$6)\n",
+          "transmitted": "\nSkillParcel original synthetic literal: orchard-73.\nFormula =B5*(1+$B$6)\n",
+          "mode": "exact-text",
+          "normalization": "none",
+          "expectedOccurrences": 1,
+          "pass": true,
+          "rawPass": true,
+          "occurrences": 1,
+          "diff": [
+            {
+              "kind": "equal",
+              "text": "\nSkillParcel original synthetic literal: orchard-73.\nFormula =B5*(1+$B$6)\n"
+            }
+          ],
+          "evidenceRef": {
+            "requestOrdinal": 1,
+            "messageIndex": 0,
+            "blockIndex": 3
+          }
+        }
+      ],
+      "limits": {
+        "inputBytes": 262144,
+        "requestBytes": 8388608,
+        "turns": 8,
+        "timeoutMs": 30000
+      },
+      "evidence": [
+        {
+          "sequence": 1,
+          "stage": "validate",
+          "elapsedMs": 0
+        },
+        {
+          "sequence": 2,
+          "stage": "isolate",
+          "elapsedMs": 0
+        },
+        {
+          "sequence": 3,
+          "stage": "start-endpoint",
+          "elapsedMs": 16
+        },
+        {
+          "sequence": 4,
+          "stage": "start-native",
+          "elapsedMs": 16
+        },
+        {
+          "sequence": 5,
+          "stage": "invoked",
+          "elapsedMs": 16,
+          "detail": "Explicit native /literal"
+        },
+        {
+          "sequence": 6,
+          "stage": "body-observed",
+          "elapsedMs": 181,
+          "requestOrdinal": 1
+        },
+        {
+          "sequence": 7,
+          "stage": "compared",
+          "elapsedMs": 202
+        },
+        {
+          "sequence": 8,
+          "stage": "completed",
+          "elapsedMs": 202
+        },
+        {
+          "sequence": 9,
+          "stage": "cleanup",
+          "elapsedMs": 204
+        }
+      ],
+      "evidenceRefs": [
+        {
+          "requestOrdinal": 1,
+          "bytes": 1974
+        }
+      ],
+      "isolation": {
+        "uniqueConfig": true,
+        "newSession": true,
+        "homePreserved": true,
+        "excludedCanaryAbsent": true,
+        "onlyExpectedTools": true,
+        "cleanup": true
+      },
+      "nativeExitCode": 0,
+      "omissions": [
+        "Reference Read was not requested or measured"
+      ]
+    },
+    {
+      "id": "reference-read",
+      "title": "Body followed by a forced native Read",
+      "fixtureHash": "cf034bf7c1bba13933efb2ecb6ae37e18c9fda8a340cd5f55ff717b07612a0b1",
+      "outcome": "pass",
+      "measurementStatus": "complete",
+      "contractStatus": "pass",
+      "observedStages": [
+        "body",
+        "reference-read"
+      ],
+      "checks": [
+        {
+          "id": "body-text",
+          "stage": "body",
+          "sourceFile": "skill/reference-read/SKILL.md",
+          "sourceSha256": "bb2a2b99cfed89016e5b6fdd76cb599bdd8e13916f5e2eed119f142a20a09cbd",
+          "encoding": "UTF-8",
+          "sourceRange": {
+            "startByte": 144,
+            "endByte": 207
+          },
+          "source": "\nBody is measured before Read.\nReference: references/proof.txt\n",
+          "expected": "\nBody is measured before Read.\nReference: references/proof.txt\n",
+          "transmitted": "\nBody is measured before Read.\nReference: references/proof.txt\n",
+          "mode": "exact-text",
+          "normalization": "none",
+          "expectedOccurrences": 1,
+          "pass": true,
+          "rawPass": true,
+          "occurrences": 1,
+          "diff": [
+            {
+              "kind": "equal",
+              "text": "\nBody is measured before Read.\nReference: references/proof.txt\n"
+            }
+          ],
+          "evidenceRef": {
+            "requestOrdinal": 1,
+            "messageIndex": 0,
+            "blockIndex": 3
+          }
+        },
+        {
+          "id": "forced-read-text",
+          "stage": "reference-read",
+          "sourceFile": "skill/reference-read/references/proof.txt",
+          "sourceSha256": "359d8820caccdd004c6ad3a2fdbec7c6dbf003bb9295c413b658c699b054b172",
+          "encoding": "UTF-8",
+          "sourceRange": {
+            "startByte": 21,
+            "endByte": 92
+          },
+          "source": "\nOriginal reference only: cedar-41.\nПрочитано 世界 👋 é\n",
+          "expected": "\nOriginal reference only: cedar-41.\nПрочитано 世界 👋 é\n",
+          "transmitted": "\nOriginal reference only: cedar-41.\nПрочитано 世界 👋 é\n",
+          "mode": "exact-text",
+          "normalization": "none",
+          "expectedOccurrences": 1,
+          "pass": true,
+          "rawPass": true,
+          "occurrences": 1,
+          "diff": [
+            {
+              "kind": "equal",
+              "text": "\nOriginal reference only: cedar-41.\nПрочитано 世界 👋 é\n"
+            }
+          ],
+          "evidenceRef": {
+            "requestOrdinal": 2,
+            "messageIndex": 2,
+            "blockIndex": 0,
+            "toolUseId": "sp_read_59d31cdb-c935-44c8-a598-c091cb944794"
+          }
+        }
+      ],
+      "limits": {
+        "inputBytes": 262144,
+        "requestBytes": 8388608,
+        "turns": 8,
+        "timeoutMs": 30000
+      },
+      "evidence": [
+        {
+          "sequence": 1,
+          "stage": "validate",
+          "elapsedMs": 0
+        },
+        {
+          "sequence": 2,
+          "stage": "isolate",
+          "elapsedMs": 1
+        },
+        {
+          "sequence": 3,
+          "stage": "start-endpoint",
+          "elapsedMs": 16
+        },
+        {
+          "sequence": 4,
+          "stage": "start-native",
+          "elapsedMs": 16
+        },
+        {
+          "sequence": 5,
+          "stage": "invoked",
+          "elapsedMs": 16,
+          "detail": "Explicit native /reference-read"
+        },
+        {
+          "sequence": 6,
+          "stage": "body-observed",
+          "elapsedMs": 182,
+          "requestOrdinal": 1
+        },
+        {
+          "sequence": 7,
+          "stage": "optional-read-requested",
+          "elapsedMs": 182,
+          "requestOrdinal": 1,
+          "toolUseId": "sp_read_59d31cdb-c935-44c8-a598-c091cb944794",
+          "detail": "forced native Read path"
+        },
+        {
+          "sequence": 8,
+          "stage": "read-executed",
+          "elapsedMs": 213,
+          "toolUseId": "sp_read_59d31cdb-c935-44c8-a598-c091cb944794"
+        },
+        {
+          "sequence": 9,
+          "stage": "read-result-transmitted",
+          "elapsedMs": 213,
+          "requestOrdinal": 2,
+          "toolUseId": "sp_read_59d31cdb-c935-44c8-a598-c091cb944794"
+        },
+        {
+          "sequence": 10,
+          "stage": "compared",
+          "elapsedMs": 213
+        },
+        {
+          "sequence": 11,
+          "stage": "completed",
+          "elapsedMs": 213
+        },
+        {
+          "sequence": 12,
+          "stage": "cleanup",
+          "elapsedMs": 215
+        }
+      ],
+      "evidenceRefs": [
+        {
+          "requestOrdinal": 1,
+          "bytes": 2821
+        },
+        {
+          "requestOrdinal": 2,
+          "bytes": 3347
+        }
+      ],
+      "isolation": {
+        "uniqueConfig": true,
+        "newSession": true,
+        "homePreserved": true,
+        "excludedCanaryAbsent": true,
+        "onlyExpectedTools": true,
+        "cleanup": true
+      },
+      "nativeExitCode": 0,
+      "omissions": []
+    },
+    {
+      "id": "reference-withheld",
+      "title": "Reference exists but is not transmitted without Read",
+      "fixtureHash": "37172f94f0491c90a5bda2d1f63a4b3d665e1f36f65aa3c9bc914f4967b1f50e",
+      "outcome": "pass",
+      "measurementStatus": "complete",
+      "contractStatus": "pass",
+      "observedStages": [
+        "body"
+      ],
+      "checks": [
+        {
+          "id": "body-text",
+          "stage": "body",
+          "sourceFile": "skill/reference-withheld/SKILL.md",
+          "sourceSha256": "4b678801ad17634e8448890a6a6d3d10b92a24cd80632fda8dd7093ef45493fa",
+          "encoding": "UTF-8",
+          "sourceRange": {
+            "startByte": 152,
+            "endByte": 214
+          },
+          "source": "\nOnly this body is requested.\nReference: references/proof.txt\n",
+          "expected": "\nOnly this body is requested.\nReference: references/proof.txt\n",
+          "transmitted": "\nOnly this body is requested.\nReference: references/proof.txt\n",
+          "mode": "exact-text",
+          "normalization": "none",
+          "expectedOccurrences": 1,
+          "pass": true,
+          "rawPass": true,
+          "occurrences": 1,
+          "diff": [
+            {
+              "kind": "equal",
+              "text": "\nOnly this body is requested.\nReference: references/proof.txt\n"
+            }
+          ],
+          "evidenceRef": {
+            "requestOrdinal": 1,
+            "messageIndex": 0,
+            "blockIndex": 3
+          }
+        }
+      ],
+      "limits": {
+        "inputBytes": 262144,
+        "requestBytes": 8388608,
+        "turns": 8,
+        "timeoutMs": 30000
+      },
+      "evidence": [
+        {
+          "sequence": 1,
+          "stage": "validate",
+          "elapsedMs": 0
+        },
+        {
+          "sequence": 2,
+          "stage": "isolate",
+          "elapsedMs": 1
+        },
+        {
+          "sequence": 3,
+          "stage": "start-endpoint",
+          "elapsedMs": 18
+        },
+        {
+          "sequence": 4,
+          "stage": "start-native",
+          "elapsedMs": 18
+        },
+        {
+          "sequence": 5,
+          "stage": "invoked",
+          "elapsedMs": 18,
+          "detail": "Explicit native /reference-withheld"
+        },
+        {
+          "sequence": 6,
+          "stage": "body-observed",
+          "elapsedMs": 193,
+          "requestOrdinal": 1
+        },
+        {
+          "sequence": 7,
+          "stage": "compared",
+          "elapsedMs": 228
+        },
+        {
+          "sequence": 8,
+          "stage": "completed",
+          "elapsedMs": 228
+        },
+        {
+          "sequence": 9,
+          "stage": "cleanup",
+          "elapsedMs": 230
+        }
+      ],
+      "evidenceRefs": [
+        {
+          "requestOrdinal": 1,
+          "bytes": 2017
+        }
+      ],
+      "isolation": {
+        "uniqueConfig": true,
+        "newSession": true,
+        "homePreserved": true,
+        "excludedCanaryAbsent": true,
+        "onlyExpectedTools": true,
+        "cleanup": true
+      },
+      "nativeExitCode": 0,
+      "omissions": [
+        "Reference Read was not requested or measured"
+      ]
+    },
+    {
+      "id": "repeated-html",
+      "title": "Repeated marker, long line and hostile HTML as text",
+      "fixtureHash": "c75a14ebd79fc81cd8a864ac7318016df14fd36134f1ed4c3ac2d17cd5cac27a",
+      "outcome": "pass",
+      "measurementStatus": "complete",
+      "contractStatus": "pass",
+      "observedStages": [
+        "body"
+      ],
+      "checks": [
+        {
+          "id": "body-text",
+          "stage": "body",
+          "sourceFile": "skill/repeated-html/SKILL.md",
+          "sourceSha256": "e258b46688601030e369730a486364b93bb9a163207d8b2c1469793a4c2e88f6",
+          "encoding": "UTF-8",
+          "sourceRange": {
+            "startByte": 142,
+            "endByte": 2065
+          },
+          "source": "\nrepeat-me repeat-me\n</script><script>globalThis.SKILLPARCEL_ATTACK=true</script>\nLong synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · \n",
+          "expected": "\nrepeat-me repeat-me\n</script><script>globalThis.SKILLPARCEL_ATTACK=true</script>\nLong synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · \n",
+          "transmitted": "\nrepeat-me repeat-me\n</script><script>globalThis.SKILLPARCEL_ATTACK=true</script>\nLong synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · \n",
+          "mode": "exact-text",
+          "normalization": "none",
+          "expectedOccurrences": 1,
+          "pass": true,
+          "rawPass": true,
+          "occurrences": 1,
+          "diff": [
+            {
+              "kind": "equal",
+              "text": "\nrepeat-me repeat-me\n</script><script>globalThis.SKILLPARCEL_ATTACK=true</script>\nLong synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · \n"
+            }
+          ],
+          "evidenceRef": {
+            "requestOrdinal": 1,
+            "messageIndex": 0,
+            "blockIndex": 3
+          }
+        },
+        {
+          "id": "two-occurrences-only-in-first-request",
+          "stage": "body",
+          "sourceFile": "skill/repeated-html/SKILL.md",
+          "sourceSha256": "e258b46688601030e369730a486364b93bb9a163207d8b2c1469793a4c2e88f6",
+          "encoding": "UTF-8",
+          "sourceRange": {
+            "startByte": 142,
+            "endByte": 2065
+          },
+          "source": "\nrepeat-me repeat-me\n</script><script>globalThis.SKILLPARCEL_ATTACK=true</script>\nLong synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · \n",
+          "expected": "repeat-me",
+          "transmitted": "\nrepeat-me repeat-me\n</script><script>globalThis.SKILLPARCEL_ATTACK=true</script>\nLong synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · \n",
+          "mode": "contains-exact",
+          "normalization": "none",
+          "expectedOccurrences": 2,
+          "pass": true,
+          "rawPass": true,
+          "occurrences": 2,
+          "diff": [
+            {
+              "kind": "removed",
+              "text": "repeat-me"
+            },
+            {
+              "kind": "added",
+              "text": "\nrepeat-me repeat-me\n</script><script>globalThis.SKILLPARCEL_ATTACK=true</script>\nLong synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · Long synthetic text · \n"
+            }
+          ],
+          "evidenceRef": {
+            "requestOrdinal": 1,
+            "messageIndex": 0,
+            "blockIndex": 3
+          }
+        }
+      ],
+      "limits": {
+        "inputBytes": 262144,
+        "requestBytes": 8388608,
+        "turns": 8,
+        "timeoutMs": 30000
+      },
+      "evidence": [
+        {
+          "sequence": 1,
+          "stage": "validate",
+          "elapsedMs": 0
+        },
+        {
+          "sequence": 2,
+          "stage": "isolate",
+          "elapsedMs": 1
+        },
+        {
+          "sequence": 3,
+          "stage": "start-endpoint",
+          "elapsedMs": 19
+        },
+        {
+          "sequence": 4,
+          "stage": "start-native",
+          "elapsedMs": 19
+        },
+        {
+          "sequence": 5,
+          "stage": "invoked",
+          "elapsedMs": 19,
+          "detail": "Explicit native /repeated-html"
+        },
+        {
+          "sequence": 6,
+          "stage": "body-observed",
+          "elapsedMs": 193,
+          "requestOrdinal": 1
+        },
+        {
+          "sequence": 7,
+          "stage": "compared",
+          "elapsedMs": 214
+        },
+        {
+          "sequence": 8,
+          "stage": "completed",
+          "elapsedMs": 214
+        },
+        {
+          "sequence": 9,
+          "stage": "cleanup",
+          "elapsedMs": 216
+        }
+      ],
+      "evidenceRefs": [
+        {
+          "requestOrdinal": 1,
+          "bytes": 3854
+        }
+      ],
+      "isolation": {
+        "uniqueConfig": true,
+        "newSession": true,
+        "homePreserved": true,
+        "excludedCanaryAbsent": true,
+        "onlyExpectedTools": true,
+        "cleanup": true
+      },
+      "nativeExitCode": 0,
+      "omissions": [
+        "Reference Read was not requested or measured"
+      ]
+    },
+    {
+      "id": "unicode-empty",
+      "title": "UTF-8, combining character and an empty fragment",
+      "fixtureHash": "f981b6432b07fe558d273a4e91ffb9cf1657c19bd436a72fc5935a247657bc05",
+      "outcome": "pass",
+      "measurementStatus": "complete",
+      "contractStatus": "pass",
+      "observedStages": [
+        "body"
+      ],
+      "checks": [
+        {
+          "id": "body-text",
+          "stage": "body",
+          "sourceFile": "skill/unicode-empty/SKILL.md",
+          "sourceSha256": "649209f6c4bdd7cb34906165eb99e0e29b4fecc823205b55041f2e7b96c55bd9",
+          "encoding": "UTF-8",
+          "sourceRange": {
+            "startByte": 142,
+            "endByte": 221
+          },
+          "source": "\nПривет · 世界 · 👋 · é\n\n<!-- EMPTY_BEGIN --><!-- EMPTY_END -->\n",
+          "expected": "\nПривет · 世界 · 👋 · é\n\n<!-- EMPTY_BEGIN --><!-- EMPTY_END -->\n",
+          "transmitted": "\nПривет · 世界 · 👋 · é\n\n<!-- EMPTY_BEGIN --><!-- EMPTY_END -->\n",
+          "mode": "exact-text",
+          "normalization": "none",
+          "expectedOccurrences": 1,
+          "pass": true,
+          "rawPass": true,
+          "occurrences": 1,
+          "diff": [
+            {
+              "kind": "equal",
+              "text": "\nПривет · 世界 · 👋 · é\n\n<!-- EMPTY_BEGIN --><!-- EMPTY_END -->\n"
+            }
+          ],
+          "evidenceRef": {
+            "requestOrdinal": 1,
+            "messageIndex": 0,
+            "blockIndex": 3
+          }
+        },
+        {
+          "id": "empty-fragment",
+          "stage": "body",
+          "sourceFile": "skill/unicode-empty/SKILL.md",
+          "sourceSha256": "649209f6c4bdd7cb34906165eb99e0e29b4fecc823205b55041f2e7b96c55bd9",
+          "encoding": "UTF-8",
+          "sourceRange": {
+            "startByte": 202,
+            "endByte": 202
+          },
+          "source": "",
+          "expected": "",
+          "transmitted": "",
+          "mode": "exact-text",
+          "normalization": "none",
+          "expectedOccurrences": 1,
+          "pass": true,
+          "rawPass": true,
+          "occurrences": 1,
+          "diff": [],
+          "evidenceRef": {
+            "requestOrdinal": 1,
+            "messageIndex": 0,
+            "blockIndex": 3
+          }
+        }
+      ],
+      "limits": {
+        "inputBytes": 262144,
+        "requestBytes": 8388608,
+        "turns": 8,
+        "timeoutMs": 30000
+      },
+      "evidence": [
+        {
+          "sequence": 1,
+          "stage": "validate",
+          "elapsedMs": 0
+        },
+        {
+          "sequence": 2,
+          "stage": "isolate",
+          "elapsedMs": 1
+        },
+        {
+          "sequence": 3,
+          "stage": "start-endpoint",
+          "elapsedMs": 17
+        },
+        {
+          "sequence": 4,
+          "stage": "start-native",
+          "elapsedMs": 17
+        },
+        {
+          "sequence": 5,
+          "stage": "invoked",
+          "elapsedMs": 17,
+          "detail": "Explicit native /unicode-empty"
+        },
+        {
+          "sequence": 6,
+          "stage": "body-observed",
+          "elapsedMs": 184,
+          "requestOrdinal": 1
+        },
+        {
+          "sequence": 7,
+          "stage": "compared",
+          "elapsedMs": 205
+        },
+        {
+          "sequence": 8,
+          "stage": "completed",
+          "elapsedMs": 205
+        },
+        {
+          "sequence": 9,
+          "stage": "cleanup",
+          "elapsedMs": 207
+        }
+      ],
+      "evidenceRefs": [
+        {
+          "requestOrdinal": 1,
+          "bytes": 2010
+        }
+      ],
+      "isolation": {
+        "uniqueConfig": true,
+        "newSession": true,
+        "homePreserved": true,
+        "excludedCanaryAbsent": true,
+        "onlyExpectedTools": true,
+        "cleanup": true
+      },
+      "nativeExitCode": 0,
+      "omissions": [
+        "Reference Read was not requested or measured"
+      ]
+    }
+  ],
+  "exitCode": 1,
+  "omissions": [
+    "Model response quality and voluntary reference selection are not measured",
+    "No other client, default interactive mode, OS or native build is certified",
+    "Raw HTTP, vendor instructions, headers, CLI stdout and user profiles are omitted"
+  ]
+}

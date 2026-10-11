@@ -1,0 +1,425 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "toolVersion": {
+      "type": "string"
+    },
+    "adapterVersion": {
+      "type": "string"
+    },
+    "nativeVersion": {
+      "type": "string"
+    },
+    "nativeSha256": {
+      "type": "string"
+    },
+    "OS": {
+      "type": "string"
+    },
+    "arch": {
+      "type": "string"
+    },
+    "recordedAt": {
+      "type": "string"
+    },
+    "sourceCommit": {
+      "type": "string"
+    },
+    "invocationMode": {
+      "type": "string"
+    },
+    "networkMode": {
+      "type": "string"
+    },
+    "coverage": {
+      "type": "string",
+      "enum": [
+        "native-verified",
+        "diagnostic-unverified",
+        "portable-only"
+      ]
+    },
+    "recorded": {
+      "type": "boolean"
+    },
+    "cases": {
+      "maxItems": 50,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "fixtureHash": {
+            "type": "string"
+          },
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "violation",
+              "error",
+              "unsupported",
+              "cancelled"
+            ]
+          },
+          "measurementStatus": {
+            "type": "string",
+            "enum": [
+              "complete",
+              "error",
+              "unsupported",
+              "cancelled"
+            ]
+          },
+          "contractStatus": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "violation",
+              "not-measured"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "reasonCode": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "observedStages": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "checks": {
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "stage": {
+                  "type": "string"
+                },
+                "sourceFile": {
+                  "type": "string"
+                },
+                "sourceSha256": {
+                  "type": "string"
+                },
+                "encoding": {
+                  "type": "string",
+                  "const": "UTF-8"
+                },
+                "sourceRange": {
+                  "type": "object",
+                  "properties": {
+                    "startByte": {
+                      "type": "number"
+                    },
+                    "endByte": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "startByte",
+                    "endByte"
+                  ],
+                  "additionalProperties": false
+                },
+                "source": {
+                  "type": "string",
+                  "maxLength": 262144
+                },
+                "expected": {
+                  "type": "string",
+                  "maxLength": 262144
+                },
+                "transmitted": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 262144
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "mode": {
+                  "type": "string"
+                },
+                "normalization": {
+                  "type": "string"
+                },
+                "expectedOccurrences": {
+                  "type": "number"
+                },
+                "pass": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "rawPass": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "occurrences": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "diff": {
+                  "maxItems": 10000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string"
+                      },
+                      "text": {
+                        "type": "string",
+                        "maxLength": 262144
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "text"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "evidenceRef": {
+                  "type": "object",
+                  "properties": {
+                    "requestOrdinal": {
+                      "type": "number"
+                    },
+                    "messageIndex": {
+                      "type": "number"
+                    },
+                    "blockIndex": {
+                      "type": "number"
+                    },
+                    "toolUseId": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "requestOrdinal",
+                    "messageIndex",
+                    "blockIndex"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "id",
+                "stage",
+                "sourceFile",
+                "sourceSha256",
+                "encoding",
+                "sourceRange",
+                "source",
+                "expected",
+                "transmitted",
+                "mode",
+                "normalization",
+                "expectedOccurrences",
+                "pass",
+                "rawPass",
+                "occurrences",
+                "diff"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "limits": {
+            "type": "object",
+            "properties": {
+              "inputBytes": {
+                "type": "number"
+              },
+              "requestBytes": {
+                "type": "number"
+              },
+              "turns": {
+                "type": "number"
+              },
+              "timeoutMs": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "inputBytes",
+              "requestBytes",
+              "turns",
+              "timeoutMs"
+            ],
+            "additionalProperties": false
+          },
+          "evidence": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sequence": {
+                  "type": "number"
+                },
+                "stage": {
+                  "type": "string"
+                },
+                "elapsedMs": {
+                  "type": "number"
+                },
+                "requestOrdinal": {
+                  "type": "number"
+                },
+                "toolUseId": {
+                  "type": "string"
+                },
+                "detail": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sequence",
+                "stage",
+                "elapsedMs"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "evidenceRefs": {
+            "maxItems": 8,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "requestOrdinal": {
+                  "type": "number"
+                },
+                "bytes": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "requestOrdinal",
+                "bytes"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "isolation": {
+            "type": "object",
+            "properties": {
+              "uniqueConfig": {
+                "type": "boolean"
+              },
+              "newSession": {
+                "type": "boolean"
+              },
+              "homePreserved": {
+                "type": "boolean"
+              },
+              "excludedCanaryAbsent": {
+                "type": "boolean"
+              },
+              "onlyExpectedTools": {
+                "type": "boolean"
+              },
+              "cleanup": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "uniqueConfig",
+              "newSession",
+              "homePreserved",
+              "excludedCanaryAbsent",
+              "onlyExpectedTools",
+              "cleanup"
+            ],
+            "additionalProperties": false
+          },
+          "nativeExitCode": {
+            "type": "number"
+          },
+          "omissions": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "fixtureHash",
+          "outcome",
+          "measurementStatus",
+          "contractStatus",
+          "observedStages",
+          "checks",
+          "limits",
+          "evidence",
+          "evidenceRefs",
+          "omissions"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "exitCode": {
+      "type": "number"
+    },
+    "omissions": {
+      "maxItems": 20,
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "toolVersion",
+    "adapterVersion",
+    "nativeVersion",
+    "nativeSha256",
+    "OS",
+    "arch",
+    "recordedAt",
+    "invocationMode",
+    "networkMode",
+    "coverage",
+    "recorded",
+    "cases",
+    "exitCode",
+    "omissions"
+  ],
+  "additionalProperties": false
+}
