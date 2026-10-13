@@ -4,16 +4,18 @@ import { constants } from "node:fs";
 import { createHash } from "node:crypto";
 import { fixtureSchema, relativePath } from "./schema.js";
 import type { Fixture, Check } from "./schema.js";
+import { ParcelError } from "../errors.js";
+import { budgets, assertBudget } from "../budgets.js";
+export { ParcelError } from "../errors.js";
 export const hash = (bytes: Uint8Array | string) =>
   createHash("sha256").update(bytes).digest("hex");
-export const decode = (bytes: Uint8Array) =>
-  new TextDecoder("utf-8", { fatal: true, ignoreBOM: true }).decode(bytes);
-export class ParcelError extends Error {
-  constructor(
-    public code: string,
-    message: string,
-  ) {
-    super(message);
+export function decode(bytes: Uint8Array) {
+  try {
+    return new TextDecoder("utf-8", { fatal: true, ignoreBOM: true }).decode(
+      bytes,
+    );
+  } catch {
+    throw new ParcelError("utf8", "Input must be well-formed UTF-8");
   }
 }
 export async function boundedFile(path: string, limit: number) {
@@ -160,14 +162,23 @@ export interface Loaded {
   }[];
 }
 export async function loadFixture(dir: string): Promise<Loaded> {
+  if ((await lstat(resolve(dir))).isSymbolicLink())
+    throw new ParcelError("symlink", "Fixture roots must not be symlinks");
   const root = await realpath(resolve(dir));
   const caseBytes = await boundedFile(
     await contained(root, "skillparcel.case.json"),
-    131072,
+    budgets.fixtureJsonBytes,
   );
-  if (caseBytes.length > 131072)
-    throw new ParcelError("input-limit", "Case JSON exceeds 128 KiB");
-  const fixture = fixtureSchema.parse(JSON.parse(decode(caseBytes)));
+  let fixture: Fixture;
+  try {
+    fixture = fixtureSchema.parse(JSON.parse(decode(caseBytes)));
+  } catch (error) {
+    if (error instanceof ParcelError) throw error;
+    throw new ParcelError(
+      "fixture-schema",
+      "Invalid case JSON or authoring schema; see docs/fixture.schema.json",
+    );
+  }
   const files = new Map<string, Buffer>([["skillparcel.case.json", caseBytes]]);
   const paths = new Set([
     fixture.skillDirectory + "/SKILL.md",
@@ -177,6 +188,11 @@ export async function loadFixture(dir: string): Promise<Loaded> {
     ]),
   ]);
   if (fixture.referenceRead) {
+    if (!fixture.referenceRead.path.startsWith(fixture.skillDirectory + "/"))
+      throw new ParcelError(
+        "reference-path",
+        "Declared reference must be inside the skill directory",
+      );
     try {
       await contained(root, fixture.referenceRead.path);
       paths.add(fixture.referenceRead.path);
@@ -190,8 +206,24 @@ export async function loadFixture(dir: string): Promise<Loaded> {
     }
   }
   let total = caseBytes.length;
+  assertBudget(
+    total,
+    fixture.limits.inputBytes,
+    "input-limit",
+    "Fixture input",
+  );
   for (const p of [...paths].sort()) {
-    const file = await contained(root, p);
+    let file: string;
+    try {
+      file = await contained(root, p);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === "ENOENT")
+        throw new ParcelError(
+          "missing-input",
+          "A declared source or golden file is missing",
+        );
+      throw error;
+    }
     const s = await lstat(file);
     if (!s.isFile() || s.size > fixture.limits.inputBytes)
       throw new ParcelError("input-limit", "Input is not a small regular file");
@@ -224,12 +256,20 @@ export async function loadFixture(dir: string): Promise<Loaded> {
         "Check source must match its native stage",
       );
     const bytes = files.get(check.sourceFile)!;
+    if (check.stage === "body" && check.sourceRange) {
+      const header = /^---\r?\n[\s\S]*?\r?\n---\r?\n/.exec(decode(bytes))![0];
+      if (check.sourceRange.startByte < Buffer.byteLength(header))
+        throw new ParcelError(
+          "selector",
+          "Body byte selector overlaps frontmatter",
+        );
+    }
     const text = decode(bytes),
       source = select(text, check),
       expected = check.expectedText ?? decode(files.get(check.expectedFile!)!);
     if (
-      Buffer.byteLength(source) > 131072 ||
-      Buffer.byteLength(expected) > 131072
+      Buffer.byteLength(source) > budgets.sourceFragmentBytes ||
+      Buffer.byteLength(expected) > budgets.sourceFragmentBytes
     )
       throw new ParcelError(
         "fragment-limit",
@@ -273,6 +313,8 @@ export async function assertNoDrift(loaded: Loaded) {
   }
 }
 export async function discover(dir: string): Promise<string[]> {
+  if ((await lstat(resolve(dir))).isSymbolicLink())
+    throw new ParcelError("symlink", "Fixture roots must not be symlinks");
   const root = await realpath(resolve(dir));
   try {
     await lstat(join(root, "skillparcel.case.json"));
@@ -296,7 +338,7 @@ export async function discover(dir: string): Promise<string[]> {
       }
     }
   }
-  if (!found.length || found.length > 50)
+  if (!found.length || found.length > budgets.cases)
     throw new ParcelError(
       "case-count",
       "Expected between 1 and 50 intentional local cases",

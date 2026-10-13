@@ -1,3 +1,4 @@
+import { budgets } from "../budgets.js";
 export interface EvidenceEvent {
   sequence: number;
   stage: string;
@@ -13,7 +14,7 @@ export class Events {
     stage: string,
     extra: Omit<EvidenceEvent, "sequence" | "stage" | "elapsedMs"> = {},
   ) {
-    if (this.events.length >= 100)
+    if (this.events.length >= budgets.events)
       throw new Error("Evidence event budget exceeded");
     this.events.push({
       sequence: this.events.length + 1,

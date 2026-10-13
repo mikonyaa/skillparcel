@@ -1,6 +1,6 @@
 {
   "name": "skillparcel",
-  "version": "0.1.0",
+  "version": "0.1.1-rc.1",
   "description": "Capture what native Claude Code loads from synthetic skill contracts before inference",
   "type": "module",
   "license": "MIT",
@@ -15,6 +15,10 @@
     "fixtures",
     "templates",
     "examples",
+    "docs",
+    "SECURITY.md",
+    "CONTRIBUTING.md",
+    "CHANGELOG.md",
     "README.md",
     "LICENSE",
     "THIRD_PARTY_NOTICES.md"

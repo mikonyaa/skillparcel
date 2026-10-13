@@ -1,21 +1,26 @@
 #!/usr/bin/env node
 import { parseArgs } from "node:util";
 import { readFile, writeFile, mkdir, cp, readdir, rm } from "node:fs/promises";
-import { resolve, join, dirname } from "node:path";
+import { resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { identify } from "../native/identity.js";
-import { discover, ParcelError, boundedFile } from "../fixtures/loader.js";
+import { ParcelError } from "../fixtures/loader.js";
+import { preflight, validationResult } from "../fixtures/preflight.js";
 import { runCases, TOOL_VERSION } from "../run.js";
 import { html } from "../report/html.js";
 import { junit } from "../report/junit.js";
 import { reportSchema, serializeReport } from "../report/json.js";
 import type { Report } from "../report/json.js";
+import { readReport } from "../report/reader.js";
+import { saveBundle } from "../report/bundle.js";
+import { outputDirectory } from "../output.js";
 const packageRoot = fileURLToPath(new URL("../../", import.meta.url));
 const help = `SkillParcel ${TOOL_VERSION} — test what native Claude Code loads from your skills.
 Usage:
  skillparcel --version
  skillparcel doctor --client /absolute/path/to/claude --json
  skillparcel init --dir ./parcel-example
+ skillparcel validate ./parcel-example --json
  skillparcel run ./parcel-example --client /absolute/path/to/claude --out ./parcel-results
  skillparcel run ./parcel-example --client /absolute/path/to/claude --format junit --no-open
  skillparcel demo --client /absolute/path/to/claude --out ./demo-results
@@ -25,39 +30,9 @@ Options: --json, --format json|junit|html, --no-open, --allow-unverified-client,
  --private-capture DIR (explicit local raw bytes, mode 0600; delete DIR after diagnosis).
 Native runs require the separately installed signed macOS arm64 Claude Code 2.1.280 build.
 Recorded mode only views historical evidence. No inference model or paid provider is used.
-Exit: 0 pass; 1 measured violation; 2 error; 3 unsupported/unmeasured; 130 cancelled.
+validate is portable: 0 valid fixture suite; 2 invalid input. It never spawns a native client.
+Exit: 0 pass/view/init/validation; 1 measured violation; 2 error; 3 unsupported/unmeasured; 130 cancelled.
 `;
-async function outputDirectory(dir: string) {
-  const path = resolve(dir);
-  await mkdir(dirname(path), { recursive: true });
-  try {
-    await mkdir(path, { recursive: false });
-  } catch (e) {
-    if ((e as NodeJS.ErrnoException).code !== "EEXIST") throw e;
-    if ((await readdir(path)).length)
-      throw new ParcelError(
-        "output-exists",
-        "Use a new or empty output directory",
-      );
-  }
-  await writeFile(
-    join(path, ".skillparcel-output-lock"),
-    "Owned SkillParcel output reservation\n",
-    { flag: "wx" },
-  );
-  return path;
-}
-async function save(report: Report, out: string) {
-  const dir = await outputDirectory(out);
-  for (const [name, text] of [
-    ["report.json", serializeReport(report)],
-    ["report.html", await html(report)],
-    ["junit.xml", junit(report)],
-  ])
-    await writeFile(join(dir, name!), text!, { flag: "wx" });
-  await rm(join(dir, ".skillparcel-output-lock"));
-  return dir;
-}
 async function main() {
   const parsed = parseArgs({
     allowPositionals: true,
@@ -85,22 +60,58 @@ async function main() {
     console.log(help);
     return;
   }
-  if (!["doctor", "init", "run", "demo", "report"].includes(command))
+  if (
+    !["doctor", "init", "validate", "run", "demo", "report"].includes(command)
+  )
     throw new ParcelError("command", "Unknown command; use --help");
   if (v.format && !["json", "junit", "html"].includes(v.format))
     throw new ParcelError("format", "Use json, junit or html");
   if (command === "init") {
     if (!v.dir) throw new ParcelError("input", "init requires --dir");
-    const dir = await outputDirectory(v.dir);
     const template = join(packageRoot, "templates/parcel-example");
+    await preflight(template);
+    const dir = await outputDirectory(v.dir);
     for (const entry of await readdir(template))
       await cp(join(template, entry), join(dir, entry), {
         recursive: true,
         errorOnExist: true,
         force: false,
       });
+    await preflight(dir);
     await rm(join(dir, ".skillparcel-output-lock"));
     console.log(JSON.stringify({ initialized: true, directory: dir }));
+    return;
+  }
+  if (command === "validate") {
+    const dir = parsed.positionals[1];
+    if (!dir)
+      throw new ParcelError("input", "validate requires a fixture directory");
+    try {
+      console.log(JSON.stringify(validationResult(await preflight(dir))));
+    } catch (error) {
+      const reason =
+        error instanceof ParcelError
+          ? error
+          : new ParcelError(
+              "input-or-io",
+              "Fixture validation or local I/O failed",
+            );
+      console.log(
+        JSON.stringify({
+          schemaVersion: 1,
+          command: "validate",
+          valid: false,
+          coverage: "portable-only",
+          nativeSpawned: false,
+          reasonCode: reason.code,
+          reason: reason.message,
+        }),
+      );
+      process.stderr.write(
+        JSON.stringify({ error: reason.code, message: reason.message }) + "\n",
+      );
+      process.exitCode = 2;
+    }
     return;
   }
   if (command === "doctor") {
@@ -145,10 +156,7 @@ async function main() {
         "input",
         "report requires a report JSON path and --out file",
       );
-    const bytes = await boundedFile(resolve(input), 8 * 1024 * 1024);
-    if (bytes.length > 8 * 1024 * 1024)
-      throw new ParcelError("input-limit", "Report exceeds 8 MiB");
-    const report = reportSchema.parse(JSON.parse(bytes.toString("utf8")));
+    const report = await readReport(resolve(input));
     await writeFile(resolve(v.out), await html(report), { flag: "wx" });
     console.log(JSON.stringify({ rendered: true }));
     return;
@@ -168,11 +176,6 @@ async function main() {
   } else {
     if (v.recorded)
       throw new ParcelError("input", "--recorded is only available for demo");
-    if (!v.client)
-      throw new ParcelError(
-        "missing-client",
-        "Native run requires --client /absolute/path/to/claude. It never opens login",
-      );
     const dir =
       command === "demo"
         ? join(packageRoot, "fixtures")
@@ -181,6 +184,12 @@ async function main() {
       throw new ParcelError(
         "input",
         "run requires an intentional local fixture directory",
+      );
+    const prepared = await preflight(dir);
+    if (!v.client)
+      throw new ParcelError(
+        "missing-client",
+        "Native run requires --client /absolute/path/to/claude. It never opens login",
       );
     if (v["private-capture"]) {
       await mkdir(resolve(v["private-capture"]), {
@@ -196,22 +205,26 @@ async function main() {
     process.once("SIGINT", onInterrupt);
     process.once("SIGTERM", onInterrupt);
     try {
-      report = await runCases(await discover(dir), v.client, {
-        allowUnverified: v["allow-unverified-client"],
-        privateDir: v["private-capture"]
-          ? resolve(v["private-capture"])
-          : undefined,
-        signal: abort.signal,
-        ...(/^[0-9a-f]{40}$/.test(process.env.SKILLPARCEL_SOURCE_COMMIT ?? "")
-          ? { sourceCommit: process.env.SKILLPARCEL_SOURCE_COMMIT }
-          : {}),
-      });
+      report = await runCases(
+        prepared.cases.map((c) => c.root),
+        v.client,
+        {
+          allowUnverified: v["allow-unverified-client"],
+          privateDir: v["private-capture"]
+            ? resolve(v["private-capture"])
+            : undefined,
+          signal: abort.signal,
+          ...(/^[0-9a-f]{40}$/.test(process.env.SKILLPARCEL_SOURCE_COMMIT ?? "")
+            ? { sourceCommit: process.env.SKILLPARCEL_SOURCE_COMMIT }
+            : {}),
+        },
+      );
     } finally {
       process.removeListener("SIGINT", onInterrupt);
       process.removeListener("SIGTERM", onInterrupt);
     }
   }
-  await save(
+  await saveBundle(
     report,
     v.out ?? (command === "demo" ? "demo-results" : "parcel-results"),
   );

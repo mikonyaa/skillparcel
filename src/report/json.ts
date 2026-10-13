@@ -1,4 +1,9 @@
 import { z } from "zod";
+import {
+  budgets,
+  boundedReportJson,
+  reportBytesUpperBound,
+} from "../budgets.js";
 const fragment = z.string().max(262144);
 const event = z.strictObject({
   sequence: z.number(),
@@ -26,7 +31,7 @@ const check = z.strictObject({
   occurrences: z.number().nullable(),
   diff: z
     .array(z.strictObject({ kind: z.string(), text: fragment }))
-    .max(10000),
+    .max(budgets.diffParts),
   evidenceRef: z
     .strictObject({
       requestOrdinal: z.number(),
@@ -59,7 +64,7 @@ export const caseReportSchema = z
       turns: z.number(),
       timeoutMs: z.number(),
     }),
-    evidence: z.array(event).max(100),
+    evidence: z.array(event).max(budgets.events),
     evidenceRefs: z
       .array(z.strictObject({ requestOrdinal: z.number(), bytes: z.number() }))
       .max(8),
@@ -117,7 +122,7 @@ export const reportSchema = z
       "portable-only",
     ]),
     recorded: z.boolean(),
-    cases: z.array(caseReportSchema).max(50),
+    cases: z.array(caseReportSchema).max(budgets.cases),
     exitCode: z.number(),
     omissions: z.array(z.string()).max(20),
   })
@@ -153,7 +158,8 @@ export const reportSchema = z
 export type CaseReport = z.infer<typeof caseReportSchema>;
 export type Report = z.infer<typeof reportSchema>;
 export function publicReport(x: unknown): Report {
+  reportBytesUpperBound(x);
   return reportSchema.parse(x);
 }
 export const serializeReport = (x: Report) =>
-  JSON.stringify(publicReport(x), null, 2) + "\n";
+  boundedReportJson(publicReport(x));

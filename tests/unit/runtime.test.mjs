@@ -2,6 +2,11 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { startEndpoint } from "../../dist/provider/loopback.js";
 import { runProcess } from "../../dist/native/process.js";
+import { spawn, spawnSync } from "node:child_process";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { setTimeout as delay } from "node:timers/promises";
 const endpoint = (overrides = {}) =>
   startEndpoint({
     credential: "synthetic-only",
@@ -146,3 +151,85 @@ test("malformed native output and unknown events cannot silently pass", async ()
       (e) => ["native-output", "unsupported-native-event"].includes(e.code),
     );
 });
+
+test(
+  "cancellation stops an owned descendant while an independent process remains alive",
+  { skip: process.platform === "win32" },
+  async () => {
+    const root = await mkdtemp(join(tmpdir(), "sp-group-"));
+    const marker = join(root, "owned-pids.json");
+    const sibling = spawn(process.execPath, ["-e", "setInterval(()=>{},100)"], {
+      stdio: "ignore",
+      shell: false,
+    });
+    const siblingClosed = new Promise((resolve) =>
+      sibling.once("close", resolve),
+    );
+    const abort = new AbortController();
+    let owned;
+    const code = `const {spawn}=require('node:child_process');const {writeFileSync}=require('node:fs');const child=spawn(process.execPath,['-e','setInterval(()=>{},100)'],{stdio:'ignore',shell:false});writeFileSync(process.argv[1],JSON.stringify({parent:process.pid,descendant:child.pid}));setInterval(()=>{},100);`;
+    const result = runProcess(
+      process.execPath,
+      ["-e", code, marker],
+      root,
+      {},
+      5000,
+      abort.signal,
+    );
+    const settled = result.then(
+      () => undefined,
+      (error) => error,
+    );
+    try {
+      const deadline = performance.now() + 3000;
+      while (performance.now() < deadline) {
+        try {
+          owned = JSON.parse(await readFile(marker, "utf8"));
+          break;
+        } catch {
+          await delay(10);
+        }
+      }
+      assert.ok(owned, "Owned child did not publish its marker");
+      const group = spawnSync(
+        "/bin/ps",
+        ["-o", "pgid=", "-p", String(owned.descendant)],
+        { encoding: "utf8" },
+      );
+      assert.equal(Number(group.stdout.trim()), owned.parent);
+      abort.abort();
+      assert.equal((await settled)?.code, "cancelled");
+      await delay(30);
+      const status = spawnSync(
+        "/bin/ps",
+        ["-o", "stat=", "-p", String(owned.descendant)],
+        { encoding: "utf8" },
+      );
+      assert.ok(
+        !status.stdout.trim() || status.stdout.trim().startsWith("Z"),
+        "Owned descendant remained running",
+      );
+      assert.doesNotThrow(() => process.kill(sibling.pid, 0));
+    } finally {
+      abort.abort();
+      await settled;
+      if (owned) {
+        const group = spawnSync(
+          "/bin/ps",
+          ["-o", "pgid=", "-p", String(owned.descendant)],
+          { encoding: "utf8" },
+        );
+        if (Number(group.stdout.trim()) === owned.parent) {
+          try {
+            process.kill(-owned.parent, "SIGKILL");
+          } catch {
+            /* Already stopped. */
+          }
+        }
+      }
+      sibling.kill("SIGKILL");
+      await siblingClosed;
+      await rm(root, { recursive: true, force: true });
+    }
+  },
+);

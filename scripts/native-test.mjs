@@ -7,7 +7,16 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import assert from "node:assert/strict";
 import { runCases } from "../dist/run.js";
-import { discover } from "../dist/fixtures/loader.js";
+import { discover, loadFixture } from "../dist/fixtures/loader.js";
+import { identify } from "../dist/native/identity.js";
+import {
+  isolate,
+  nativeArguments,
+  nativeEnvironment,
+} from "../dist/native/isolation.js";
+import { runProcess } from "../dist/native/process.js";
+import { startEndpoint } from "../dist/provider/loopback.js";
+import { randomUUID } from "node:crypto";
 import { serializeReport } from "../dist/report/json.js";
 import { html } from "../dist/report/html.js";
 import { junit } from "../dist/report/junit.js";
@@ -22,11 +31,14 @@ const expected = JSON.parse(
   await readFile("tests/native/expected-outcomes.json", "utf8"),
 );
 const dirs = await discover("fixtures");
+const source = process.env.SKILLPARCEL_SOURCE_COMMIT
+  ? { sourceCommit: process.env.SKILLPARCEL_SOURCE_COMMIT }
+  : {};
 const signatures = [];
 let last;
 for (let repeat = 1; repeat <= 3; repeat++) {
   const r = await runCases(dirs, values.client, {
-    sourceCommit: process.env.SKILLPARCEL_SOURCE_COMMIT,
+    ...source,
   });
   assert.equal(r.coverage, "native-verified");
   assert.equal(r.exitCode, 1);
@@ -88,8 +100,8 @@ for (let repeat = 1; repeat <= 3; repeat++) {
 assert.equal(signatures[0], signatures[1]);
 assert.equal(signatures[0], signatures[2]);
 const [parallelA, parallelB] = await Promise.all([
-  runCases([resolve("fixtures/reference-read")], values.client),
-  runCases([resolve("fixtures/reference-read")], values.client),
+  runCases([resolve("fixtures/reference-read")], values.client, source),
+  runCases([resolve("fixtures/reference-read")], values.client, source),
 ]);
 assert.equal(parallelA.exitCode, 0);
 assert.equal(parallelB.exitCode, 0);
@@ -98,34 +110,101 @@ assert.notEqual(
   parallelB.cases[0].checks[1].evidenceRef.toolUseId,
 );
 const negative = await mkdtemp(join(tmpdir(), "skillparcel-negative-"));
+await writeFile(join(out, "parallel-a.json"), serializeReport(parallelA));
+await writeFile(join(out, "parallel-b.json"), serializeReport(parallelB));
 try {
   await cp("fixtures/reference-read", negative, { recursive: true });
   const file = join(negative, "skillparcel.case.json");
   const f = JSON.parse(await readFile(file, "utf8"));
   f.referenceRead.permission = "deny";
   await writeFile(file, JSON.stringify(f));
-  const denied = await runCases([negative], values.client);
+  const denied = await runCases([negative], values.client, source);
   assert.equal(denied.exitCode, 3);
   assert.equal(denied.cases[0].reasonCode, "read-denied");
   await writeFile(join(out, "denied-read.json"), serializeReport(denied));
   await rm(join(negative, f.referenceRead.path));
-  const missing = await runCases([negative], values.client);
-  assert.equal(missing.exitCode, 2);
-  assert.equal(missing.cases[0].reasonCode, "missing-reference");
+  let missing;
+  await assert.rejects(runCases([negative], values.client, source), (error) => {
+    missing = { exitCode: 2, reasonCode: error.code, nativeSpawned: false };
+    return error.code === "missing-reference";
+  });
   await writeFile(
     join(out, "missing-reference.json"),
-    serializeReport(missing),
+    JSON.stringify(missing, null, 2) + "\n",
   );
 } finally {
   await rm(negative, { recursive: true, force: true });
 }
+// Exercise the exact signed native executable with a deterministic 1 ms
+// process deadline. This is operational evidence, not a fixture verdict.
+const timeoutLoaded = await loadFixture("fixtures/reference-read");
+const timeoutIdentity = await identify(values.client);
+const timeoutIsolation = await isolate(timeoutLoaded);
+const timeoutCredential = "skillparcel-synthetic-timeout-" + randomUUID();
+let timeoutEndpoint;
+try {
+  timeoutEndpoint = await startEndpoint({
+    credential: timeoutCredential,
+    requestBytes: timeoutLoaded.fixture.limits.requestBytes,
+    turns: 2,
+    onRequest: () => [
+      { type: "text", text: "Original synthetic timeout probe" },
+    ],
+    onFault: () => {},
+  });
+  await assert.rejects(
+    runProcess(
+      timeoutIdentity.executable,
+      nativeArguments(
+        timeoutIsolation.project,
+        timeoutIsolation.skillPath,
+        timeoutLoaded,
+        timeoutIsolation.sessionId,
+      ),
+      timeoutIsolation.project,
+      nativeEnvironment(
+        timeoutIsolation.root,
+        timeoutIsolation.config,
+        timeoutEndpoint.url,
+        timeoutCredential,
+      ),
+      1,
+    ),
+    (error) => error.code === "timeout",
+  );
+} finally {
+  await timeoutEndpoint?.close();
+  await timeoutIsolation.cleanup();
+}
+await writeFile(
+  join(out, "timeout.json"),
+  JSON.stringify(
+    {
+      kind: "native-process-deadline",
+      deadlineMs: 1,
+      cliOutcomeCode: 2,
+      reasonCode: "timeout",
+      nativeIdentity: timeoutIdentity.identity,
+      fixtureHash: timeoutLoaded.fixtureHash,
+      ownedCleanup: true,
+      ...source,
+      omissions: [
+        "Operational deadline probe; no completed contract measurement",
+      ],
+    },
+    null,
+    2,
+  ) + "\n",
+);
 const abort = new AbortController();
 abort.abort();
 const cancelled = await runCases([resolve("fixtures/literal")], values.client, {
+  ...source,
   signal: abort.signal,
 });
 assert.equal(cancelled.exitCode, 130);
 assert.equal(cancelled.cases[0].isolation.cleanup, true);
+await writeFile(join(out, "cancelled.json"), serializeReport(cancelled));
 // Signal only the CLI spawned by this acceptance test, after its own endpoint
 // starts listening. This tests the actual CLI SIGINT path with a native child.
 const signalRoot = await mkdtemp(join(tmpdir(), "skillparcel-signal-test-"));
@@ -213,6 +292,7 @@ await writeFile(
       deniedVsMissingDistinct: true,
       cancellationCleanup: true,
       sigintCleanup: true,
+      timeoutCleanup: true,
       sourceCommit: process.env.SKILLPARCEL_SOURCE_COMMIT ?? null,
     },
     null,
