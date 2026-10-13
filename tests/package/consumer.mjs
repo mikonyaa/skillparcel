@@ -120,7 +120,12 @@ try {
   }
   await checkDocument(join(packageRoot, "README.md"));
   assert.ok(links.has("docs/fixture.schema.json"));
-  assert.ok(links.has("dist/adapters/claude-code/manifest.js"));
+  assert.equal(
+    (
+      await lstat(join(packageRoot, "dist/adapters/claude-code/manifest.js"))
+    ).isFile(),
+    true,
+  );
   assert.ok(links.has("SECURITY.md") && links.has("CONTRIBUTING.md"));
   const example = join(root, "пример with spaces 世界");
   await command(process.execPath, [bin, "init", "--dir", example], root);

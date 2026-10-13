@@ -14,7 +14,7 @@ On the tested build, seven explicit arguments change `=B5*(1+$B$6)` to `=B5*(1+$
 
 ## Quick start
 
-Authoring, portable validation and recorded reports require **Node 24 LTS**. Native capture additionally requires the separately installed, Anthropic-signed macOS arm64 Claude Code **2.1.280** build whose SHA-256 is in [the compiled adapter manifest](dist/adapters/claude-code/manifest.js). Unknown versions/builds are unsupported. SkillParcel does not install or modify Claude Code. Obtain the native CLI from [Anthropic's official setup instructions](https://code.claude.com/docs/en/setup).
+Authoring, portable validation and recorded reports require **Node 24 LTS**. Native capture additionally requires the separately installed, Anthropic-signed macOS arm64 Claude Code **2.1.280** build whose SHA-256 is in [the SHA-pinned adapter manifest](https://github.com/mikonyaa/skillparcel/blob/a6acb183ba25675b49d8e3be19ae87563365be4c/src/adapters/claude-code/manifest.ts). Unknown versions/builds are unsupported. SkillParcel does not install or modify Claude Code. Obtain the native CLI from [Anthropic's official setup instructions](https://code.claude.com/docs/en/setup).
 
 This checkout is the **unpublished 0.1.1-rc.1 candidate**. To use its new `validate` command, install the local archive produced by `npm run build && npm pack`, then follow the authoring steps below. The public 0.1.0 archive remains a historical release and does not contain these changes; it is available from [the release page](https://github.com/mikonyaa/skillparcel/releases/tag/v0.1.0).
 
