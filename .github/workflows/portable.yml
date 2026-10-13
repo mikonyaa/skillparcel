@@ -23,6 +23,10 @@ jobs:
       - run: npm run lint
       - run: npm run build
       - run: npm run test:unit
+      - name: Check generated schema stability
+        run: |
+          node scripts/schemas.mjs
+          git diff --exit-code -- docs/fixture.schema.json docs/report.schema.json
       - run: npx playwright install --with-deps chromium
       - run: npm run test:report
       - name: Build one final consumer archive
@@ -30,11 +34,11 @@ jobs:
           mkdir -p work/candidate
           npm pack --json --pack-destination work/candidate > work/pack.json
       - name: Verify the same archive outside checkout
-        run: npm run test:package -- --tarball work/candidate/skillparcel-0.1.0.tgz
+        run: npm run test:package -- --tarball work/candidate/skillparcel-0.1.1-rc.1.tgz
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: release-candidate
-          path: work/candidate/skillparcel-0.1.0.tgz
+          path: work/candidate/skillparcel-0.1.1-rc.1.tgz
           if-no-files-found: error
           retention-days: 7
       - name: Native evidence boundary

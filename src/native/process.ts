@@ -24,10 +24,12 @@ export async function runProcess(
   timeoutMs: number,
   signal?: AbortSignal,
 ) {
+  const ownGroup = process.platform !== "win32";
   const child = spawn(executable, args, {
     cwd,
     env,
     shell: false,
+    detached: ownGroup,
     stdio: ["ignore", "pipe", "pipe"],
   });
   const decoder = new StringDecoder("utf8");
@@ -36,11 +38,38 @@ export async function runProcess(
     stderrBytes = 0,
     fault: ParcelError | undefined;
   const events: NativeEvent[] = [];
+  let killTimer: ReturnType<typeof setTimeout> | undefined;
+  const signalOwned = (signal: NodeJS.Signals) => {
+    if (!child.pid) return;
+    if (!ownGroup) {
+      child.kill(signal);
+      return;
+    }
+    try {
+      process.kill(-child.pid, signal);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ESRCH") {
+        fault ??= new ParcelError(
+          "process-cleanup",
+          "Could not signal owned process group",
+        );
+        child.kill(signal);
+      }
+    }
+  };
+  const terminate = () => {
+    signalOwned("SIGTERM");
+    if (!killTimer) {
+      killTimer = setTimeout(() => signalOwned("SIGKILL"), 500);
+      killTimer.unref();
+    }
+  };
+  // A helper may hold inherited pipes after its parent exits. It belongs to
+  // this spawned POSIX group; no unrelated CLI or parallel session is signalled.
+  child.once("exit", terminate);
   const stop = (error: ParcelError) => {
     fault ??= error;
-    child.kill("SIGTERM");
-    const kill = setTimeout(() => child.kill("SIGKILL"), 500);
-    kill.unref();
+    terminate();
   };
   const consume = (line: string) => {
     if (!line.trim()) return;
@@ -118,8 +147,9 @@ export async function runProcess(
     return { events, exitCode: exit.code, stdoutBytes: total, stderrBytes };
   } finally {
     clearTimeout(timer);
+    clearTimeout(killTimer);
     signal?.removeEventListener("abort", cancel);
-    if (child.exitCode === null && child.signalCode === null)
-      child.kill("SIGTERM");
+    signalOwned("SIGKILL");
+    if (fault?.code === "process-cleanup") throw fault;
   }
 }

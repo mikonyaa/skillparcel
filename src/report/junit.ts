@@ -1,11 +1,9 @@
 import type { Report } from "./json.js";
+const forbiddenXml =
+  /[^\t\n\r\u0020-\ud7ff\ue000-\ufffd\u{10000}-\u{10ffff}]/gu;
 const xml = (s: string) =>
-  Array.from(s)
-    .filter((c) => {
-      const code = c.codePointAt(0)!;
-      return code >= 32 || code === 9 || code === 10 || code === 13;
-    })
-    .join("")
+  s
+    .replace(forbiddenXml, "")
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")

@@ -1,7 +1,6 @@
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 import {
-  loadFixture,
   assertNoDrift,
   ParcelError,
   select,
@@ -24,8 +23,10 @@ import {
 } from "./capture/extract.js";
 import { compare } from "./contracts/compare.js";
 import { Events } from "./capture/events.js";
+import { preflightDirectories } from "./fixtures/preflight.js";
+import { budgets } from "./budgets.js";
 import type { Report, CaseReport } from "./report/json.js";
-export const TOOL_VERSION = "0.1.0";
+export const TOOL_VERSION = "0.1.1-rc.1";
 export function exitPriority(codes: number[]) {
   if (codes.includes(130)) return 130;
   return [2, 3, 1, 0].find((c) => codes.includes(c)) ?? 3;
@@ -44,6 +45,12 @@ export async function runCases(
     sourceCommit?: string;
   } = {},
 ): Promise<Report> {
+  if (options.sourceCommit && !/^[0-9a-f]{40}$/.test(options.sourceCommit))
+    throw new ParcelError(
+      "source-commit",
+      "Source commit must be a full lowercase Git SHA",
+    );
+  const prepared = await preflightDirectories(dirs);
   const { executable, identity } = await identify(
     client,
     options.allowUnverified,
@@ -71,7 +78,7 @@ export async function runCases(
       "Raw HTTP, vendor instructions, headers, CLI stdout and user profiles are omitted",
     ],
   };
-  for (const dir of dirs) {
+  for (const loaded of prepared.cases) {
     const ev = new Events();
     const c: CaseReport = {
       id: "invalid-fixture",
@@ -95,7 +102,6 @@ export async function runCases(
     if (options.signal?.aborted) abort.abort();
     try {
       ev.add("validate");
-      const loaded = await loadFixture(dir);
       const f = loaded.fixture;
       c.id = f.id;
       c.title = f.title;
@@ -334,7 +340,7 @@ export async function runCases(
             "Required sentinels or byte range were not observed",
           );
         }
-        if (Buffer.byteLength(actual) > 262144)
+        if (Buffer.byteLength(actual) > budgets.transmittedFragmentBytes)
           throw new ParcelError(
             "fragment-limit",
             "Selected transmitted fragment exceeds 256 KiB",

@@ -1,0 +1,15 @@
+# Compatibility: 0.1.0 to 0.1.1-rc.1
+
+This is an unpublished local candidate. Fixture and report `schemaVersion` remain **1**; generated schemas must remain byte-identical. Literal goldens, fixture hashes, Unicode/whitespace comparison and explicit CRLF rules are unchanged. The adapter version, exact signed Claude Code 2.1.280 SHA, Team ID, platform/version/managed-policy gates, forced Read correlation and environment allowlist remain pinned.
+
+Native spawning now creates a dedicated POSIX process group. Timeout/cancellation/parent completion terminates only that owned group and removes escalation timers after close. This strengthens the original PID-only cleanup so an owned helper cannot survive while independent sessions remain running. Windows retains the portable child-only path; native Windows coverage is still unsupported.
+
+JSON report admission changes from an inconsistent unbounded writer / 8 MiB reader to a shared **64 MiB canonical JSON** limit. Serialized output includes pretty indentation and the final newline. Existing valid reports below this budget remain readable; newly accepted 8–64 MiB reports are supported by the candidate reader. Oversized external or synthetic reports are rejected. The schema alone does not encode aggregate admission.
+
+`validate DIR --json` is new and portable. It returns labelled JSON with exit 0 for valid input and exit 2 for invalid input. A native run still uses 0/1/2/3/130 for pass/violation/error/unsupported/cancelled. Recorded export still exits 0 when viewing succeeds while preserving its historical stored `exitCode` and native metadata. No recorded report is relabelled as a new current run.
+
+The complete fixture suite is now validated before native prerequisites or any capture. Aggregate input (8 MiB) and report reservations (64 MiB) can reject schema-valid suites; split oversized suites into separate runs. Duplicate case IDs, body ranges overlapping frontmatter and references outside the skill directory fail early. Invalid input no longer starts a client or creates a measurement bundle; programmatic `runCases` rejects with a typed `ParcelError`. Do not expect a measured error-case report from an admission failure. Missing versus denied Read remains distinct: missing is validation exit 2, denied is measured unsupported exit 3.
+
+JUnit omits XML 1.0 forbidden characters (including U+FFFE/U+FFFF, NUL and lone surrogates). This changes only XML transport; JSON keeps the original admitted text. Valid astral characters and XML-legal controls survive. The report remains standalone, with the existing CSP and exact JSON evidence embedded safely.
+
+The tarball now ships authoring/report schemas, key documentation, historical screenshots/recording, SECURITY, CONTRIBUTING and CHANGELOG. README manifest links target the compiled adapter. Its clean installed consumer requires neither source/tests nor dev dependencies and verifies every relative README target plus reachable Markdown links. Historical QA remains explicitly dated; repeat native verification on the candidate commit with [the runbook](native-runbook.md).

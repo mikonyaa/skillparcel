@@ -4,9 +4,14 @@ import { resolve, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import assert from "node:assert/strict";
 import { html } from "../../dist/report/html.js";
-const out = resolve("work/report-qa");
+const out = resolve(process.env.SKILLPARCEL_QA_OUT ?? "work/report-qa");
 await mkdir(out, { recursive: true });
-const report = JSON.parse(await readFile("examples/report.json", "utf8"));
+const report = JSON.parse(
+  await readFile(
+    process.env.SKILLPARCEL_QA_REPORT ?? "examples/report.json",
+    "utf8",
+  ),
+);
 await writeFile(join(out, "recorded.html"), await html(report));
 const empty = {
   ...report,
@@ -181,6 +186,24 @@ try {
     );
     await page.evaluate(() => {
       Object.defineProperty(navigator, "clipboard", {
+        value: {
+          writeText: async (text) => {
+            globalThis.SKILLPARCEL_COPIED = text;
+          },
+        },
+        configurable: true,
+      });
+    });
+    await page
+      .getByRole("button", { name: "Copy native demo command", exact: true })
+      .click();
+    await page.getByText("Command copied.", { exact: true }).waitFor();
+    assert.equal(
+      await page.evaluate(() => globalThis.SKILLPARCEL_COPIED),
+      "skillparcel demo --client /absolute/path/to/claude --out ./demo-results --no-open",
+    );
+    await page.evaluate(() => {
+      Object.defineProperty(navigator, "clipboard", {
         value: { writeText: () => Promise.reject(Error("denied")) },
         configurable: true,
       });
@@ -205,6 +228,7 @@ try {
       noPageOverflow: true,
       htmlPayloadSafe: true,
       clipboardFallback: true,
+      clipboardSuccessHandler: true,
       externalRequests: 0,
     });
     await context.close();

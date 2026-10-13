@@ -1,5 +1,7 @@
 # Local acceptance — 2026-10-12
 
+This document preserves historical **0.1.0** acceptance. It is not verification of the unpublished 0.1.1-rc.1 candidate. New acceptance must be tied to its own source commit and archive; see [the native runbook](native-runbook.md).
+
 The local release gate ran on an Apple M4, macOS 26.7.1 (25G241), Node 24.21.0. Native evidence uses the separately installed Anthropic-signed **Claude Code 2.1.280**, arm64, SHA-256 `387a5c5dcdbb815085edf0baf79591f9d8894efe922bceaf3d75b1b08055229d`. No personal account credentials or paid inference were supplied to the client.
 
 | Check | Observed result |
@@ -16,7 +18,7 @@ The local release gate ran on an Apple M4, macOS 26.7.1 (25G241), Node 24.21.0. 
 | Real terminal recording | 25 seconds; installed package stdout, original source, decoded own fragment/diff and native Read evidence; final screen held to reach 25 seconds |
 | Browser | Chromium 156.0.8078.4; actual `file://` report at 1440, 1024 and 390 px; filters, evidence, keyboard focus, empty/error/unsupported, long names/code, escaped HTML/control text and clipboard fallback passed; 0 external requests/page errors |
 
-The dollar-digit violation measured `$B$6 → $Bseven` with seven explicit arguments. The second violation is our intentionally changed source with an unchanged author golden; it is not attributed to the vendor. These expected exit-1 results are asserted, not ignored. The independent expectations live in [the native acceptance contract](../tests/native/expected-outcomes.json).
+The dollar-digit violation measured `$B$6 → $Bseven` with seven explicit arguments. The second violation is our intentionally changed source with an unchanged author golden; it is not attributed to the vendor. These expected exit-1 results are asserted, not ignored. The independent expectations live in [the historical native acceptance contract](https://github.com/mikonyaa/skillparcel/blob/a6acb183ba25675b49d8e3be19ae87563365be4c/tests/native/expected-outcomes.json).
 
 [Browser results](qa/browser-results.json) and actual screenshots: [1440](qa/violation-1440.png), [1024](qa/violation-1024.png), [390](qa/violation-390.png), [Read evidence](qa/reference-390.png), [unsupported](qa/unsupported-390.png). Screenshots were visually inspected; no overlapping controls or page-wide overflow were observed. Browser error/unsupported samples are deliberate renderer-test data, not native coverage claims.
 
