@@ -9,7 +9,7 @@
 - Independent large-report/UTF-8 boundary/XML parser regressions, portable negative controls, timeout cleanup and a Mac acceptance runbook.
 - Dedicated owned POSIX process groups for descendant cleanup; cancellation regressions preserve an independent sibling process.
 
-Schema version 1, native identity and outcome exit codes are unchanged. [Compatibility notes](docs/migration-0.1.1.md) document the earlier admission failures and new command. This candidate has not been pushed or published.
+Schema version 1, native identity and outcome exit codes are unchanged. [Compatibility notes](docs/migration-0.1.1.md) document the earlier admission failures and new command. This candidate has not been published to npm.
 
 ## 0.1.0 — 2026-10-12
 
