@@ -127,6 +127,7 @@ export async function runProcess(
       );
       child.once("close", (code, signal) => resolve({ code, signal }));
     });
+    signalOwned("SIGKILL");
     pending += decoder.end();
     if (pending) consume(pending);
     if (fault) throw fault;
@@ -149,7 +150,7 @@ export async function runProcess(
     clearTimeout(timer);
     clearTimeout(killTimer);
     signal?.removeEventListener("abort", cancel);
-    signalOwned("SIGKILL");
-    if (fault?.code === "process-cleanup") throw fault;
+    if (child.exitCode === null && child.signalCode === null)
+      signalOwned("SIGKILL");
   }
 }
